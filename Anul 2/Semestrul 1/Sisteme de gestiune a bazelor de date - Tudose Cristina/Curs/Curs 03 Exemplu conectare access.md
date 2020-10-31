@@ -1,0 +1,72 @@
+# Laborator03 - Exemplu conectare access
+
+```c#
+// Conectare la o baza de date in Access numita Database2.accdb
+// Ce contine un tabel numit tDosare(id, nume, prenume, media)
+using System;
+using System.Collections.Generic;
+using System.Data.OleDb;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication13
+{
+    class DbAccess
+    {
+        static string strConnAccess = @"Provider=Microsoft.ACE.OLEDB.12.0; 
+                                        Data Source=C:\Users\gabi\Documents\Database2.accdb";
+        public OleDbConnection con;
+
+        public DbAccess()
+        {
+            try
+            {
+                con = new OleDbConnection(strConnAccess);
+                con.Open();
+                con.Close();
+            }
+            catch { Console.WriteLine("erroare conectare"); };
+        }
+        public void Listare()
+        {
+            try
+            {
+                string strSelect = "select nume,prenume,media from tDosare where media>5.50";
+
+                OleDbCommand cmd = new OleDbCommand(strSelect, con);
+
+                try
+                {
+                    con.Open();
+                    OleDbDataReader rdr = cmd.ExecuteReader();
+                    Console.WriteLine(" \n LISTA CANDIDATILOR CU MEDII MAI MARI DECAT 5.50");
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("{0,-20}{1,-20}{2:##.##}",
+                                 rdr["nume"], rdr["prenume"], rdr["media"]);
+                    }
+                    rdr.Close();
+                }
+                catch { Console.WriteLine("Esec"); }
+
+
+            }
+            catch (Exception e1) { Console.WriteLine(e1.Message); }
+            con.Close();
+        }
+
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            DbAccess dbA = new DbAccess();
+            dbA.Listare();
+            Console.ReadKey();
+        }
+    }
+}
+```
+

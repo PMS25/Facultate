@@ -1,0 +1,19 @@
+1. În următorul program  Java, adăugați o clasă numită Impl astfel încât executarea acestui program să afișeze mesajele:
+Valoare corecta, mai mica decat 100
+Valoare incorectă, mai mare decat 100
+
+Observatie: Nu sunt permise modificări în clasa Main sau în interfața Interf.
+
+public class Main{
+  public  static void main(String[] args){
+    Interf ma= new Impl();
+    try{
+      ma.verify(99);
+      ma.verify(101);
+    }catch(Exception e){System.out.println("Valoare incorecta, mai mare decat 100");}
+  }
+}
+
+interface Interf{
+  public void verify(int i) throws Exception;
+} 

@@ -1,0 +1,50 @@
+#include <iostream>
+using namespace std;
+//Generarea submultimilor unei multimi oarecare.
+//Backtracking
+
+struct multime{
+    int n;
+    string *s;
+};
+
+void CitireDate(multime &m){
+    cout<<"Dati cardinalul multimii: "; cin>>m.n;
+    m.s = new string[m.n+1];
+    cout<<"Elementele: ";
+    for(int i=1; i<=m.n; i++)
+        cin>>m.s[i];
+}
+
+void PrelSol(int *c, multime m){
+    for(int i=1; i<=m.n; i++)
+        if(c[i]==1)
+            cout<<m.s[i]<<" ";
+    cout<<endl;
+}
+
+inline bool Valid(int k){ return true; }
+
+void Back(int n, int min, int max, int pas, int fi, multime m){
+    int *c = new int[n+1], k;
+	for(k=1; k<=n; k++) c[k]=fi;
+	k=1;
+	while(k>0)
+		if(k==n+1){
+			PrelSol(c,m);
+			k--;
+		}else
+			if(c[k]<max){
+				c[k]+=pas;
+				if(Valid(k))
+					k++;
+			}else
+				c[k--]=fi;
+    delete[] c;
+}
+
+int main(){
+    multime m;
+    CitireDate(m);
+    Back(m.n,1,2,1,0,m);
+}

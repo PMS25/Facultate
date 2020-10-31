@@ -1,0 +1,67 @@
+Atasez o posibila rezolvare la p+q, supraincarcare operator +.
+//***************************
+#include <iostream>
+
+using namespace std;
+class Person{
+public:
+    Person(char * name):name(name){}
+    void operator+(Person x){
+        cout<<name<<" s-a intalnit cu "<<x.name<<endl;
+    }
+private:
+    char *name;
+
+};
+
+int main()
+{
+    cout << "Operator Overloading " << endl;
+    Person p("Andrei"), q("Sara");
+    p+q;
+    //Person r("Tudor");
+    //p+q+r;
+    return 0;
+}
+
+//**********************
+
+
+Ideea este urmatoarea:
+
+compilatorul transforma  expresia 
+p+q
+in expresia 
+p.operator+(q)
+
+Asta inseamna ca in clasa lui p (Person) trebuie sa existe metoda 
+
+operator+(Person)
+
+Dar care este tipul rezultatului returnat?
+Pentru cerinta p+q, merge
+
+void operator+(Person)
+
+Dar daca vreau sa pastrez proprietatea de asociativitate?
+Adica sa pot scrie
+Person r("Tudor");
+p+q+r
+cu efectul sa zicem:
+Andrei s-a intalnit cu Sara
+Andrei s-a intalnit cu Tudor
+
+Nu mai merge, pentru ca expresia este de fapt:
+(p. operator+(q)) . operator+(r)
+
+Rezolvati!
+
+Daca reusiti, supraincarcati apoi similar operatoul * astfel incat
+p*q*r
+sa aiba efectul
+
+Andrei s-a intalnit cu Sara
+Sara s-a intalnit cu Tudor
+(observati diferenta fata de +)
+
+Astept! 

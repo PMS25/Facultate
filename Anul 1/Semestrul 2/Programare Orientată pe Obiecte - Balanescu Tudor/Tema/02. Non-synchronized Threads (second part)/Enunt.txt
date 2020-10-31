@@ -1,0 +1,67 @@
+Se considera urmatoarea aplicatie in care se utilizeaza fire de executare nesincronizate. Pentru ca alocarea procesorului sa se fac echilibrat la cele doua fire, se utilizeaza metoda sleep(int ms) prin care un fir renunta din proprie initiativa la procesor (sleep) pentru un interval masurat in milisecunde, dand astfel sanse si altor fire sa primeasca procesorul (deci, se evita monopolizarea procesorului de un fir).
+
+Metoda increments(int sleeping_time) incrementeaza "lazy" valorea atributului x, renuntand la procesor intre ce 3 pasi (temp=x, temp++, x=temp). Ambele fire utilizeaza acelasi obiect Model, deci ambele incrementeaz acceasi variabila, apelnd increments cu anumiti timpi de asteptare.
+
+In cazul dat, in metod main, acestia sunt:
+
+    int sleeping1 = 100; 
+    int sleeping2 = 100; 
+
+Se cere sa  modificati acesti timpi si sa explicati rezultatele 
+
+(alegeti valori apropiate, valori foarte diferite etc. si comentati)
+
+=========================
+
+// fisier Model.java
+
+public class Model{
+	public void increments(int sleeping_time) throws Exception{
+		int temp;
+		Thread.sleep(sleeping_time);		
+		temp=x;
+		Thread.sleep(sleeping_time);
+		temp=temp+1;
+		Thread.sleep(sleeping_time);
+		x=temp;
+	}
+	public int get_x(){return x;}
+	private int x=0;
+}
+
+------------------------
+
+//fisier MyThread.java
+
+public class MyThread extends Thread{
+	public MyThread(Model m, int st){
+		md=m;
+		sleep_time=st;
+	}
+	public void run(){
+        try{
+			md.increments(sleep_time);
+		}catch(Exception e){}
+	}
+	private Model md;
+	int sleep_time=0;
+}
+
+--------------------
+
+//fisier Main.java
+
+public class Main{
+	public static void main(String args[]){
+		Model mins=new Model();
+		MyThread t1, t2;
+		int sleeping1 = 100; // modificati acesti timpi si urmariti rezultatele 
+		int sleeping2 = 100; // alegeti valori apropiate, valori foarte diferite etc. si comentati rezultatele
+		t1=new MyThread(mins,sleeping1);	
+		t2=new MyThread(mins,sleeping2);	
+		t1.start();t2.start();
+		while(t1.isAlive() || t2.isAlive()){}
+		System.out.println(mins.get_x()); 
+	}
+}
+ 

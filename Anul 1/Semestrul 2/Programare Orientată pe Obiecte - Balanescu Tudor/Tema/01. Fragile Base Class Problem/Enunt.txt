@@ -1,0 +1,105 @@
+1. In programul de mai jos (il gasiti intre liniile =====), o companie a dezvoltat clasa FragileBase (fisier FragileBase.java). Un utilzator specializeaza aceasta clasa si dezvolta clasa Derived (fisier Derived.java) si creeaza aplicatia Main.java (fisier Main.Java)
+
+a. Executati programul si explicati rezultatele.
+
+2. Sa presupunem ca dezvoltatorul clasei de baza FragileBase decide sa faca o noua versiune a clasei. Aceasta versiune noua o gasiti la sfarsitul temei, dupa linia ????????.
+
+Efectul metodelor a ramas neschimbat.
+
+Aplicatile care utilizeaza doar obiecte din FragileBase vor functiona normal cu noua versiune a clasei de baza. Aplicatia din program, care utilizeaza si obiecte din clasa derivata, nu va mai da aceleasi rezultate cand se utilizeaza noua versune! Executati aplicatia schimband prima versiune a clasei FragileBase cu versiunea noua. Rezultatul este altul!!!!!!
+
+Cautati explicatia.
+
+Aceasta anomalie care conduce la incompatibilitatea aplicatiilor cu noile versiuni ale claselor este cunoscuta sub numele de Fragile Base Class Problem.
+
+3. Rezolvare: Totul porneste de la metoda inc_by_2(), a carei implementare din clasa de baza ar trebui pastrata. Specializarea (override) acestei metode poate fi interzisa de dezvoltatorul clasei de baza, declarand metoda folosind cuvantul cheie „final”.
+
+public final void inc_by_2(){
+    counter ++;
+    counter ++;
+} 
+
+In acest fel, specializarea metodei inc_by_2() in clasa Derived NU mai este permisa de compilator!
+
+==========================================================================
+
+//fisier FragileBase.java
+//Prima versiune a clsei FragileBase
+
+public class FragileBase{
+    public void inc_by_1(){
+        counter ++;
+    }
+
+    public void inc_by_2(){
+        counter ++;
+        counter ++;
+    }
+
+    void display_counter(){
+        System.out.println("counter="+counter);
+    }
+
+    private int counter=0;
+}
+
+// fisier Derived.java
+
+public class Derived extends FragileBase{
+    // In aceasta clasa, metoda inc_by_2*() din clasa de baza a fost specializata (override)
+    public void inc_by_2(){
+    inc_by_1();
+    inc_by_1();
+}
+
+}
+
+// fisier Main.java
+
+public class Main{
+    public static void main(String args[]){
+        FragileBase o;
+        
+        System.out.println("Operatii asupra unui obiect din clasa de baza");
+        o=new FragileBase();
+        o.inc_by_1();
+        o.inc_by_2();
+        o.display_counter();
+        
+        System.out.println("Operatii asupra unui obiect din clasa derivata");
+        o=new Derived();
+        o.inc_by_1();
+        o.inc_by_2();
+        o.display_counter();
+    }
+}
+
+===========================================================================
+
+????????????????????????????????????????????
+
+//Noua versiune a clasei de baza
+
+public class FragileBase{
+
+// Aceasta este o versiune noua a clasei FragileBase
+// in care metoda inc_by_1() a fost reimplementata
+// metoda reimplementata, "aparent" pastrand efectul de incrementare cu o unitate.
+
+    public void inc_by_1(){
+        inc_by_2();
+        counter --;
+    }
+
+    public void inc_by_2(){
+        counter ++;
+        counter ++;
+    }
+
+    void display_counter(){
+        System.out.println("counter="+counter);
+    }
+
+    private int counter=0;
+}
+ 

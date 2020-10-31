@@ -1,0 +1,24 @@
+Ca de obicei, raspuneti la tudor_balanescu@yahoo.com
+Subject:: titlul temei
+
+1.
+a. In programul urmator, supradefiniti operatorul << astfel incat cout<<i sa afiseze valoarea atributului i.x
+b. Precizati si explicati rezultatele afisate la executarea programului astfel obtinut.
+
+#include <iostream.h>
+
+class C{
+    public:
+        C(int i=0){x=i;}
+        C& operator++(){++x; return *this;}
+        C  operator--(){--x; return *this;}
+    private:
+        int x;
+};
+
+void main(){
+    C i;
+    cout<<i<<endl;
+    cout<<++(++i)<<endl<<i<<endl;
+    cout<<--(--i)<<endl<<i<<endl;
+}  

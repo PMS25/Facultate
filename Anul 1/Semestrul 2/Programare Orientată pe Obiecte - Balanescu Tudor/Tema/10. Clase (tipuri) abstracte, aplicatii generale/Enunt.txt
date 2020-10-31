@@ -1,0 +1,67 @@
+In programul urmator, implementati clasele Queue si Stack astfel ca aplicatia sa functioneze conform comentariilor, pe care am incercat sa le fac cat mai explicite.
+Daca sunt nelamuriri, intrebati.
+
+#include <iostream>
+using namespace std;
+
+class AbstractElem{
+    public:
+        virtual void process()=0;// procesare element, de pilda afisare identitate
+};
+
+class AbstractList{
+    public:
+        virtual void add(AbstractElem *e)=0;// pune un element in lista
+        virtual AbstractElem*  item()=0;
+        // returneaza referinta la elementul curent din lista
+        // si sterge elementtul din lista
+};
+
+//^^^^^^^^^^^
+
+??????????????
+
+Ce vi se cere:
+// scrieti (aici) cod pentru 
+//Person, Stack, Queue
+//**************
+
+int main(){
+    cout << "Aplicatie cu caracter general, care prelucreaza date anstracte" << endl;
+    AbstractList *pal;//Inca nu stim ce va fi pal. Stiva? Coada?
+
+    int tip;
+    cin >>tip;
+    if (tip==1) pal=new Stack(); //ADAPTATI IN FUNCTIE DE TIPURILE DE LISTE
+    else   pal=new Queue();
+
+    //Acum stim, dar observati:
+    //INDIFERENT DE TIP, INSTRUCTIUNILE Care URMEAZA SUNT ACELEASI!!!!!!!!
+    //Puteti adauga si altfel de liste cu operatiole add si item,
+    //INSTRUCTIUNILE SUNT ACELEASI
+    //aDAPATATI DOAR if(tip...)
+
+    //ACESTA ESTE PROGRAMUL GENERAL, CARE SE ADAPTEAZA LA ORICE FEL DE LISTE
+    pal->add(new Person("Sara"));//1
+    pal->add(new Person("Andrei"));//2
+    (pal->item())->process();//3
+
+    //daca tip==1, afiseaza  Andrei
+    //daca tip==2, afiseaza Sara
+    // si asa mai departe...
+
+    // Instructiunile //1,//2.//3 (PROGRAMUL GENERAL) lucreaza cu orice
+    //lista, subtip (subclasa) al tipulu AbstractList
+    //alcatuite din elemente de orice tip carre este subtip al clasei AbstractElem
+
+    //REFLECTATI LA ACEASTA FACILITATE
+    //IMAGINATI-VA ca PROGRAMUL GENERAL //1,//2,//3 este o aplicatie complexa
+    // Ea poate fi scrisa fara a cunoaste tipurile concrete!
+    // se modifica doar if(tip==...)...
+
+
+    //Imaginati-va un service care are o hala ingusta, cu un singur sens, cu o intrare si o iesire. Masinile vor fi reparate dupa strategia coada
+    // daca are o hala cu o singura intrare (si tot pe acolo se iese), ultima masina va fi reparat prima, ca sa iasa celelalte, deci Stack
+    //DAR APLICATIA (//1,//2,//3)ESTE ACEEASI !!!!!!!!!!!!!!!!!!!!!
+}
+ 

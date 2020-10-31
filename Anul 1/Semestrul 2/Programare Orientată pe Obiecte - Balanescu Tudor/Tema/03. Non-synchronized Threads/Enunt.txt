@@ -1,0 +1,35 @@
+1. Executati de mai multe ori programul de mai jos (doua fire nesincronizate):
+
+-Se obtine acelasi rezultat la fiecare executare? Explicati
+
+-Care este rolul instructiunii
+
+while(t1.isAlive() || t2.isAlive()){}
+
+Eliminati aceasta instructiune si executati programul. Explicati rezultatul
+
+.................................................................
+
+//MyThread.java
+
+public class MyThread extends Thread{
+	public MyThread( int i){
+		id=i;
+	}
+	public void run(){
+		for(int i=0; i<100; i++) System.out.print(id);
+	}
+	int id=0;
+}
+
+//Main.java
+
+public class Main{
+	public static void main(String args[]){
+		MyThread t1, t2;
+		t1=new MyThread(1);	
+		t2=new MyThread(2);	
+		t1.start();t2.start();
+		while(t1.isAlive() || t2.isAlive()){}
+	}
+}

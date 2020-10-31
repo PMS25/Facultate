@@ -1,0 +1,31 @@
+Fie următorul program C++:
+
+#include <iostream.h>
+
+// legare statica versus legare dinamica
+
+class A{
+    public:
+        void st(){cout<<" A::st()"<<endl;}
+        virtual void vrt(){cout<<" A::vrt()"<<endl;}
+        void stafis(){cout<<" A::stafis()"<<endl; st(); vrt(); }
+        virtual void vrtafis(){cout<<" A::vrtafis()"<<endl; st(); vrt();}
+};
+
+class B: public A{
+    public:
+        int st(){cout<<" B::st()"<<endl; return 1;}
+        void stafis(){cout<<" B::stafis()"<<endl; st(); vrt(); }
+        virtual void vrtafis(){cout<<" B::vrtafis()"<<endl; st(); vrt();}
+};
+
+
+void main(){
+    A *p; p=new B();
+    p->st();
+    p->vrt();
+    p->stafis();
+    p->vrtafis();
+}
+
+Ce se afişează prin executarea sa? Explicaţi  mecanismul de legare a metodei la implementare pentru fiecare linie afişată. 

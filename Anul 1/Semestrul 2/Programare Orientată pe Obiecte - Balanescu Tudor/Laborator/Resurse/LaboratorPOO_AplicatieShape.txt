@@ -1,0 +1,67 @@
+Problema laborator:
+
+class Point
+{
+	private: 
+		int _x;
+		int _y;
+	public: 
+		//... constructori, metode get si set
+};
+
+class Shape
+{
+	private:
+		Point _origin; //originea figurii geometrice
+		char* _name;   
+	public:
+		//constructori, destructor
+		
+		virtual void DisplayInfo();
+		virtual double Area();
+		virtual double Perimeter();
+};
+
+class Circle : public Shape
+{
+	private:
+		double _radius;
+	public:
+		//constr., destr., metode get si set
+		//redefinire metode!!
+};
+
+class Rectangle : public Shape
+{
+	private:
+		Point _point; //_origin este coltul stanga sus, _point, dreapta jos
+	public: 
+		//... redefinire metode
+		//metode calcul lungime, latime
+};
+
+class Triangle : public Shape
+{
+	private:
+		Point _p1, _p2;
+	public:
+		//...
+};
+
+Suplimentar
+//un container de obiecte geometrice, toate de tip Shape
+
+class ShapeContainer
+{
+	private:
+		Shape** _shapes; //vector alocat dinamic cu elemente de tip Shape*
+		int _size;
+	public:
+		//constr.
+		void Add(Shape*); //adauga (re-alocare de spatiu!!)
+		Shape* RemoveLast(); //elimin ultima din lista
+		Shape* RemoveAt(int); //elimina de pe o anumita pozitie				
+		void DisplayInfoAll(); //apelez displayInfo pentru toate!!
+		virtual ~ShapeContainer();
+}
+

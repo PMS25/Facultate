@@ -1,0 +1,38 @@
+1. Se cere sa explicati rezultatele obtinute prin executarea programului C++ de mai jos.
+
+2. Corectati programul, astfel ca  pe cele doua linii sa fie afisata aceeasi valoare (20).
+
+3. Rescrieti in Java ambele variante.
+
+#include <iostream>
+
+
+using namespace std;
+
+class Person{
+
+public:
+
+    Person(int a){
+
+        int age=a;
+
+        cout<<age<<endl;
+
+    }
+
+    int age;
+
+};
+
+int main()
+
+{
+
+    Person p(20);
+
+    cout<<p.age<<endl;
+
+    return 0;
+
+} 

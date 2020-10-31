@@ -1,0 +1,31 @@
+Se cere sa supraincarcati operator= pentru clasa Persoana de mai jos.
+
+O aplicatie de genul:
+persoana p("Andrei"), q("Sara");
+p=q;
+
+va trebui sa:
+-elibereze spatiul pentru memorare sirului de caractere p.nume
+-sa aloce pentru p.nume spatiu suficient pentru memorarea sirului q.nume
+-sa copieze q.nume in p.nume.
+
+Atentie, instructiunea
+p=p; 
+trebuie sa aiba efect nul!
+
+De asemenea, expresiile de genul
+p=q=r
+trebuie sa aiba efectul standard.
+
+Iata modelul de clasa pe care lucrati.
+Important este ca implementarea constructorului sa fie facuta "by value", ca in exemplu, Ideal ar fi sa aveti 
+
+class Persoana{
+    protected:
+        char *nume;
+    public:
+        Persoana(char *m){
+            nume=new char [strlen(m)+1];
+            strcpy(nume,m);
+        }
+};

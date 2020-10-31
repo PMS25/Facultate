@@ -1,0 +1,21 @@
+Tema laborator.
+Deadline: 6 martie 2019
+
+Sa se implementeze o clasa MyString pentru siruri de caractere
+
+class MyString
+{
+	private: 
+		int _length;
+		char* _content;
+	public:
+		//afisare, citire consola
+		//constructori (cel putin 3)
+		//concatenare (MyString)+(MyString)
+		//concatenare (MyString)+(char)
+		//concatenare (char)+(MyString)
+		//concatenare (int)+(MyString)
+		//concatenare (MyString)+(int)
+		//inversare (Reverse() ) m.Reverse().Reverse() sirul initial
+		//destructor
+};

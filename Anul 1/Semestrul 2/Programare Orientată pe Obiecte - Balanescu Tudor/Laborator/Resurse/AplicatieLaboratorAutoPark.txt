@@ -1,0 +1,170 @@
+Aplicatie C#:
+
+Parc auto.
+
+class Car
+{
+- Id
+- marca
+- model
+- pret
+- anFabricatie
+- combustibil
+- km
+- status (noua sau sh)
+- lista de pictures (poze)
+}
+
+Date despre o masina vor fi memorate pe disk cu urmatoarea structura:
+
+-Folder 'Data' contine datele despre o masina in fisiere 'json'
+
+{id}.json : unde id este id-ul obiectului Car
+
+-Folder 'Pictures' : cate un subfolder cu numele 'id' masina.
+Fiecare subfolder contine pozele masinii respective.
+
+De exemplu: pentru obiectul cu id-ul 5 si pozele a.jpg, b.jpg
+pe disk, in folderul Data va exista fisierul '5.json' iar in subfolderul
+'5' al folderului 'Pictures' vor fi cele doua fisiere .jpg
+
+Functionalitati:
+
+- adaugare/stergere/modificare masini;
+- adaugare/stergere poze masini;
+- afisare date despre o masina + poze;
+- lista curenta masini;
+- ordonare masini dupa: pret, data fabricatiei;
+- cautare masini dupa interval de pret;
+- salvare date pe disk;
+
+Indicatii:
+
+Solutia Visual Studio va contine doua proiecte:
+
+"CarModel": de tip "Library" - clasele si logica acestora
+	
+	class Car
+	class Picture
+	class AutoPark (colectia de obiecte "Car")
+
+"CarUserInterface": de tip "Window Forms" - interfata grafica
+
+
+ public class Picture
+    {
+        public string Name { get; set; }
+        public string FilePath { get; set; }
+    }
+
+  public class Car
+    {
+        public int Id { get; set; }
+        public string Model { get; set; }
+        public string Manufacturer { get; set; }
+        public int Year { get; set; }
+        public List<Picture> Pictures { get; set; }
+
+        public Car()
+        {
+            Pictures = new List<Picture>();
+        }
+
+        public void AddPicture(Picture newPicture)
+        {
+            Pictures.Add(newPicture);
+        }
+
+        //
+    }
+
+Salvarea pe disk a unui obiect in format .json
+
+Utilizam libraria (dll) 'Newtonsoft' 
+
+ Car c = new Car()
+            {
+                Id = 5,
+                Model = "Focus",
+                Manufacturer = "Ford",
+                Year = 2015,
+                Pictures = new List<Picture>()
+                {
+                    new Picture()
+                    {
+                        Name = "Picture1",
+                        FilePath = "C:\\Pictures\\5\\Picture1.jpg"
+                    },
+                    new Picture()
+                    {
+                        Name = "Picture2",
+                        FilePath = "C:\\Pictures\\5\\Picture2.jpg"
+                    }
+                }
+            };
+
+            //serializare json 
+            string carAsJson = JsonConvert.SerializeObject(c);
+
+            File.WriteAllText(string.Format("{0}.json", c.Id), carAsJson);
+
+Rezultat "5.json" pe disk:
+
+{
+  "Id": 5,
+  "Model": "Focus",
+  "Manufacturer": "Ford",
+  "Year": 2015,
+  "Pictures": [
+    {
+      "Name": "Picture1",
+      "FilePath": "C:\\Pictures\\5\\Picture1.jpg"
+    },
+    {
+      "Name": "Picture2",
+      "FilePath": "C:\\Pictures\\5\\Picture2.jpg"
+    }
+  ]
+}
+
+Deserializare json ==> obiect C#:
+
+Car c1 = JsonConvert.DeserializeObject<Car>(File.ReadAllText("5.json"));
+
+Alte observatii:
+
+- clasa Car va contine o metoda pentru salvarea pe disk a datelor
+- clasa AutoPark va contine o lista de obiecte Car + metode pentru:
+	-salvare pe disk;
+	-incarcarea datelor de pe disk (citire date fisiere + deserializare)
+	-metode pentru ordonare + cautare
+
+Observatie importanta:
+
+atunci cand se adauga o poza pentru o masina, acest lucru presupune
+urmatoarele operatii:
+
+- (1) salvez poza pe disk in folderul Pictures/{Id} in forma jpg
+- (2) actualizez lista "Pictures" a obiectului "Car" de pe disk astfel:
+	-citesc de pe disk fisierul {id}.jsopn din folderul "Data";
+	-deserializez in obiect C#
+	-adaug noua poza la Picture (cu metoda AddPicture);
+	-serializez in format json;
+	-salvez din nou pe disk;
+
+ 	    //1
+            var carJsonData = File.ReadAllText("5.json");
+            //2
+            var objCar = JsonConvert.DeserializeObject<Car>(carJsonData);
+            //3
+            objCar.AddPicture(new Picture()
+            {
+                Name = "Picture3",
+                FilePath = "C:\\Pictures\\5\\Picture3.jpg"
+            });
+            //4
+            var json = JsonConvert.SerializeObject(objCar);
+            //5
+            File.WriteAllText(string.Format("{0}.json", c.Id), json);
+
+ 

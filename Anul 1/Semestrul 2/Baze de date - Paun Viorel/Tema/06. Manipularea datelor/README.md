@@ -1,0 +1,1 @@
+Exersati comenzile INSERT, SELECT INTO, UPDATE, DELETE, TRUNCATE 
