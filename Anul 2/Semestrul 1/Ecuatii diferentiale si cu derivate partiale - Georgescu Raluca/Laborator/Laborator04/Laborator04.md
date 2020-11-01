@@ -115,13 +115,13 @@ $$
 
 ![Ex4a_1](./img/Ex4a_1.png)
 
-![Ex4a_2](./img/Ex4a_1.png)
+![Ex4a_2](./img/Ex4a_2.png)
 
-![Ex4a_var1](./img/Ex4a_var1.png)
+![Ex4a-var1](./img/Ex4a-var1.png)
 
 #### c)
 
 ![Ex4c_1](./img/Ex4c_1.png)
 
-![Ex4c_2](./img/Ex4c_1.png)
+![Ex4c_2](./img/Ex4c_2.png)
 
