@@ -1,27 +1,22 @@
 # Laborator01
 
-1. Se consideră următoarea bază de cunoștințe cu informații privind anumite firme și produsele distribuite.
-- Magic srl vinde calculatoareși accesorii.
-- Alfa sa vinde televizoareși calculatoare
+## Petculescu Mihai-Silviu
+
+[TOC]
+
+## Aplicaţia 1.
+
+Se consideră următoarea bază de cunoştinţe cu informaţii privind anumite firme şi produsele distribuite.
+
+- Magic srl vinde calculatoare şi accesorii.
+- Alfa sa vinde televizoare şi calculatoare
 - Beta sa vinde accesorii.
 
-```
-CERINTE
-A. Vinde AlfaSA calculatoare?
-B. Vinde BetaSA televizoare?
-C. Ce vinde MagicSRL?
-D. Cine vinde calculatoare?
-E. Vinde AlfaSA ceva?
-F. Vinde cineva accesorii?
-G. Cine vinde la fel ca BetaSA un anumit produs?
-H. Cine vinde ce?
-I. Vinde cineva ceva?
-```
+### Cerinţe
 
-**Rezolvare**
+### SWI-Prolog
 
 ```apl
-# [laborator01].
 vinde(magicsrl,calculatoare).
 vinde(magicsrl,accesorii).
 vinde(alfasa,calculatoare).
@@ -29,53 +24,61 @@ vinde(alfasa,televizoare).
 vinde(betasa,accesorii).
 ```
 
+### A. Vinde AlfaSA calculatoare?
+
 ```apl
-# A. Vinde AlfaSA calculatoare?
 ?- vinde(alfasa,calculatoare).
 true.
 ```
 
+### B. Vinde BetaSA televizoare?
+
 ```apl
-# B. Vinde BetaSA televizoare?
 ?- vinde(betasa,televizoare).
 false.
 ```
 
+### C. Ce vinde MagicSRL?
+
 ```apl
-# C. Ce vinde MagicSRL?
 ?- vinde(magicsrl,X).
 X = calculatoare ;
 X = accesorii.
 ```
 
+### D. Cine vinde calculatoare?
+
 ```apl
-# D. Cine vinde calculatoare?
 ?- vinde(Y,calculatoare).
 Y = magicsrl ;
 Y = alfasa.
 ```
 
+### E. Vinde AlfaSA ceva?
+
 ```apl
-# E. Vinde AlfaSA ceva?
 ?- vinde(alfasa,_).
 true.
 ```
 
+### F. Vinde cineva accesorii?
+
 ```apl
-# F. Vinde cineva accesorii?
 ?- vinde(_, accesorii).
 true.
 ```
 
+### G. Cine vinde la fel ca BetaSA un anumit produs?
+
 ```apl
-# G. Cine vinde la fel ca BetaSA un anumit produs?
 ?- vinde(betasa,X), vinde(Y,X), Y='betasa'.
 X = accesorii,
 Y = betasa.
 ```
 
+### H. Cine vinde ce?
+
 ```apl
-# H. Cine vinde ce?
 ?- vinde(X,Y).
 X = magicsrl,
 Y = calculatoare ;
@@ -89,9 +92,54 @@ X = betasa,
 Y = accesorii.
 ```
 
+### I. Vinde cineva ceva?
+
 ```apl
-# I. Vinde cineva ceva?
 ?- vinde(_,_).
 true.
+```
+
+## Aplicaţia 2.
+
+Se consideră următoarea bază de cunoştinţe cu informaţii privind anumite persoane şi produsele distribuite.
+
+- Alex vinde trandafiri, lalele şi crizanteme.
+- Ana vinde lalele şi crini.
+- Andu vinde lalele şi nuci.
+
+### Cerinţe
+
+### SWI-Prolog
+
+```apl
+vinde(alex, trandafiri).
+vinde(alex, lalele).
+vinde(alex, crizanteme).
+vinde(ana, lalele).
+vinde(ana, crini).
+vinde(andu, lalele).
+vinde(andu, nuci).
+```
+
+### 1. Vinde Andrei lalele?
+
+```apl
+?- vinde(andrei,lalele).
+false.
+```
+
+### 2. Cine vinde crizanteme?
+
+```apl
+?- vinde(X,crizanteme).
+X = alex.
+```
+
+### 3. Ce vinde Ana?
+
+```apl
+?- vinde(ana,Y).
+Y = lalele;
+Y = crini.
 ```
 
