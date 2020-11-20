@@ -1,13 +1,6 @@
- # Laborator05
+# Laborator05
 
-- [Laborator05](#laborator05)
-  - [Enunţuri](#enunţuri)
-  - [Rezolvare](#rezolvare)
-    - [Exerciţiu 01](#exerciţiu-01)
-    - [Exerciţiu 02](#exerciţiu-02)
-    - [Exerciţiu 03](#exerciţiu-03)
-    - [Exerciţiu 04](#exerciţiu-04)
-    - [Exerciţiu 05](#exerciţiu-05)
+[TOC]
 
 ## Enunţuri
 

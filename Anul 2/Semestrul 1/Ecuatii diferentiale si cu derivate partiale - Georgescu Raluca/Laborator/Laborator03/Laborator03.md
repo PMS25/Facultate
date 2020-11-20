@@ -1,19 +1,6 @@
 # Laborator03
 
-- [Laborator03](#laborator03)
-  - [Enunţuri](#enunţuri)
-  - [Rezolvare](#rezolvare)
-    - [Exerciţiu 01](#exerciţiu-01)
-      - [c) - Video](#c---video)
-      - [d)](#d)
-    - [Exerciţiu 02](#exerciţiu-02)
-      - [b) - Video](#b---video)
-      - [c)](#c)
-    - [Exerciţiu 03](#exerciţiu-03)
-      - [b) - Video](#b---video)
-      - [e)](#e)
-    - [Exerciţiu 04](#exerciţiu-04)
-      - [a)](#a)
+[TOC]
 
 ## Enunţuri
 

@@ -1,11 +1,6 @@
 # Laborator01
 
-- [Laborator01](#laborator01)
-  - [Exerciţii](#exerciţii)
-  - [Rezolvare](#rezolvare)
-    - [Exercitiul 1](#exercitiul-1)
-    - [Exercitiul 2](#exercitiul-2)
-    - [Exercitiul 3](#exercitiul-3)
+[TOC]
 
 ## Exerciţii
 1. Să se calculeze următoarele primitive:

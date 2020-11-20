@@ -1,5 +1,7 @@
 # Laborator04
 
+[TOC]
+
 ## Enunţuri
 
 1. Să se rezolve următoarele ecuații de tip Bernoulli.
