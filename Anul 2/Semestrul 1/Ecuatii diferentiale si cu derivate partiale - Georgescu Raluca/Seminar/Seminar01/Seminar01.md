@@ -1,5 +1,9 @@
 # Seminar01
 
+[TOC]
+
+## Enunţuri
+
 Să se determine următoarele primitive, care îndeplinesc condiţiile specificate:
 
 $$
@@ -11,3 +15,18 @@ $$
 5)& \int [x + ln(1 + x^2)]\ dx;\ F(0) = 1\\
 \end{align*}
 $$
+
+## Rezolvare
+
+### Exerciţiu 1. şi Exerciţiu 2.
+
+![Ex1,2](.Seminar01/Ex1,2.png)
+
+### Exerciţiu 3. şi Exerciţiu 4.
+
+![Ex3,4](.Seminar01/Ex3,4.png)
+
+### Exerciţiu 5.
+
+![Ex5](.Seminar01/Ex5.png) 
+
