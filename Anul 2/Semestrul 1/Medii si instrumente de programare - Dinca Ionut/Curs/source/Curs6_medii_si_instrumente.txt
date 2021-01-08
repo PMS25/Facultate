@@ -1,0 +1,119 @@
+- Tipul delegate in C#
+- Metode anonime
+- Expresii lambda
+- Metode extinse (extension methods)
+
+1) Tipul delegate
+
+Tipul delegate permite incapsularea metodelor (Ca referinta) in obiecte.
+
+Este similar pointerilor la functii din C++, dar de data aceasta
+varianta object oriented, prin intermediul unei referinte.
+
+Daca scriem o aplicatie in care se doreste executarea unor anumite actiuni,
+pentru care cunoastem "semnatura" acestora (tip returnat, lista parametrii), 
+dar nu ne intereseaza neaparat implementarea lor (aceasta va putea fi stabilita
+ulterior), putem utiliza tipul "delegate"
+
+In acest fel aplicatia capata un caracter general, in sensul ca actiunea poate
+fi oricand modificata/optimizata/schimbata!
+
+Sintaxa:
+
+public delegate tip_returnat nume_delegate ([lista_param]);
+
+Exemplu:
+
+public delegate double Operation(int a, int b); 
+
+acest delegate poate incapsula orice functie (metoda) care returneaza double,
+si are doi parametrii de tip int.
+
+Cum se ataseaza o metoda la un delegat (instantierea delegatului)
+
+namespace DelegateApp
+{
+    class Methods
+    {
+        public static int Add(int a, int b)
+        {
+            return a + b;
+        }
+
+        public static int Mult(int a, int b)
+        {
+            return a * b;
+        }
+    }
+
+    public delegate int Operation(int a, int b);
+    public delegate int Operation1();
+    
+    class InstanceMethods
+    {
+        public int A { get; set; }
+        public int B { get; set; }
+       
+        public int Add()
+        {
+            return A + B;
+        }
+
+        public int Mult()
+        {
+            return A * B;
+        }
+    }
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Operation op; //op este un obiect de tip delegat!!
+            op = new Operation(Methods.Mult);
+
+            //apelarea delegatului se face ca si cum am apela metoda incapsulata!
+            Console.WriteLine(op(3, 4));
+            InstanceMethods obj = new InstanceMethods()
+            {
+                A = 10,
+                B = 20
+            };
+
+            Operation1 op1 = new Operation1(obj.Add);
+
+            Console.WriteLine(op1());
+
+            Console.ReadKey();
+        }
+    }
+}
+
+
+Observatie: un delegate poate incapsula de fapt mai multe metode (multicast)
+
+(cu + sau +=)
+
+ static void Main(string[] args)
+        {
+            Operation op; //op este un obiect de tip delegat!!
+            op = new Operation(Methods.Mult);
+            op += Methods.Add;
+
+            //apelarea delegatului se face ca si cum am apela metoda incapsulata!
+            Console.WriteLine(op(3, 4));
+            
+            //InstanceMethods obj = new InstanceMethods()
+            //{
+            //    A = 10,
+            //    B = 20
+            //};
+
+            //Operation1 op1 = new Operation1(obj.Add);
+
+            //Console.WriteLine(op1());
+
+            Console.ReadKey();
+        }
+
+

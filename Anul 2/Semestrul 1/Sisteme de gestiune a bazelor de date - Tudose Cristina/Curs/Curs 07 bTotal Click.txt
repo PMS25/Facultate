@@ -1,0 +1,41 @@
+private void bTotal_Click(object sender, EventArgs e)
+
+        {
+
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = Global.con;
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "ps_ValBonFarm";  // aceasta procedura trebuie creata in sqlserver
+
+            SqlParameter p1 = new SqlParameter();
+
+            p1.Value = lFarmacist.Text;
+
+            p1.ParameterName = "@CodFarm";
+
+            cmd.Parameters.Add(p1);
+
+            SqlParameter p2 = new SqlParameter();
+
+            p2.ParameterName = "@Total";
+
+            p2.DbType = DbType.Decimal;
+
+            p2.Direction = ParameterDirection.Output;
+
+            cmd.Parameters.Add(p2);
+
+            Global.con.Open();
+
+            //executarea procedurii
+
+            cmd.ExecuteScalar();
+
+            tbTotal.Text = p2.Value.ToString();
+
+            Global.con.Close();
+
+        }
