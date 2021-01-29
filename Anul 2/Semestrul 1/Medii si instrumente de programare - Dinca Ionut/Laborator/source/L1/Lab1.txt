@@ -1,0 +1,92 @@
+Laborator1 - Medii si instrumente de programare
+
+Introducere in Visual Studio
+
+https://visualstudio.microsoft.com/vs/
+
+Create new project => Console app .net framework
+
+Aplicatiile .net din visual studio sunt organizate in "solutions" (Laborator1_IntroCSharp.sln)
+O solutie contine 1 sau mai multe proiecte.(Laborator1_IntroCSharp.prj)
+
+namespace Laborator1_IntroCSharp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int an = 1;
+            int grupa = 2;
+            Console.WriteLine("Hello, informatica anul {0}, grupa {1}", an, grupa);
+            Console.ReadKey();
+        }
+    }
+}
+
+
+(1) namespace "Laborator1_IntroCSharp" - numele proiectului stabileste namespace-ul!
+
+(2) class Program (de obicei, numele fisierului, prin conventie, coincide cu numele clasei)
+
+(3) functia principala 'Main'
+
+static void Main(string[] args){}
+
+in C# orice functie/metoda exista intr-o clasa
+
+"string[] args" lista de argumente (parametrii) care reprezinta eventualele
+valori incarcate din linia de comanda.
+
+
+Tema de laborator1:
+
+Intr-un proiect Visual Studio de tip consola realizati o aplicatie 
+care permite calculul mediilor unui student si salvarea notelor si mediei
+intr-un fisier.
+
+Notele sunt transmise ca parametrii in linie de comanda (vezi string[] args functia main)
+Numele studentului va fi citit de la tastatura.
+
+
+static void Main(string[] args)
+        {
+            //int an = 1;
+            //int grupa = 2;
+            
+            //Console.WriteLine("Hello, informatica anul {0}, grupa {1}", an, grupa);
+
+
+            //int p = 1;
+            //foreach(var s in args)
+            //{
+            //    Console.WriteLine("Parametrul {0} este {1}", p++, s);
+            //}
+
+
+            //cum citim date de la conosola?
+            Console.WriteLine("Introduceti numele studentului");
+            string studentName = Console.ReadLine();
+
+            //cum se scrie intr-un fisier?
+            File.AppendAllText("Students.txt", studentName + "\n");
+
+
+            //cum se convertese un string la int (numar)?
+            string strValue = "275";
+            int value = int.Parse(strValue); //aici!
+
+
+
+
+            Console.ReadKey();
+        }
+
+
+
+
+
+
+
+
+
+
