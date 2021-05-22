@@ -1,0 +1,152 @@
+APOO - Curs 4
+
+Principii de proiectare S.O.L.I.D.
+
+SRP (Single Responsibility Principle)
+OCP (Open Closed Principle)
+LSP (Liskov Substitution Principle)
+ISP (Interface Segregation Principle)
+DIP (Dependency Injection Principle)
+
+OCP - Principiul inchiderii-deschiderii
+
+Enunt: O entitate software (clasa/metoda) trebuie sa fie deschisa la extinderi
+si inchisa la modificari.
+
+Explicatie: O clasa se proiecteaza pentru implementarea unei/unor functionalitati
+(spunem ca are niste responsabilitati). 
+Clasa trebuie proiectata astfel incat sa putem schimba/optimiza/adauga noi functionalitati
+fara modificarea codului sursa actual (fara sa fie necesara recompilarea clasei).
+
+Inchiderea se refera la faptul ca, clasa este bine definita, compilabila si nu trebuie sa fie
+modificata daca se doresc noi functionalitati.
+
+
+Exemplu:
+
+Sa se implementeze o clasa pentru logging de erori, informatii la consola.
+
+public enum LogLevel
+{
+  Info, Error, Debug, Warn
+}
+
+class Logger
+{
+	public static void Log(string message, LogLevel level)
+	{
+		Console.WriteLine("{0} - {1} - {2}", DateTime.Now, level.ToString(), message);	
+	}
+}
+
+//Utilizare
+Logger.Log("Cocolino", LogType.Info);
+
+Daca se cere logging intr-un fisier?? Sau intr-o baza de date??
+
+Clasa anterioara evident incalca OCP din acest punct de vedere.
+
+Solutia: abstractizam aceasta functionalitate (printr-o clasa abstracta sau interfata)
+
+public interface ILog
+{
+	void Log(string message, LogLevel level);
+}
+
+class ConsoleLogging : ILog
+{
+ 	public void Log(string message, LogLevel level)
+	{
+		Console.WriteLine("{0} - {1} - {2}", DateTime.Now, level.ToString(), message);	
+	}	
+}
+
+class FileLogging : ILog
+{
+	public FilePath {get; private set;}
+ 
+	public FileLogging(string filePath)
+	{
+		FilePath  = filePath;
+	}
+
+	public void Log(string message, LogLevel level)
+	{
+		Console.WriteLine("{0} - {1} - {2}", DateTime.Now, level.ToString(), message);	
+	}
+}
+
+//inchisa la modificari, deschisa la extinderi
+//deoarece posibilitatea de logging a fost izolata
+//intr-o ierarhie separata de clase (prin interfata ILog)
+class Logger
+{
+	ILog _log; /// punct de extensie
+
+	public void Log(string message, LogLevel level)
+	{
+		_log.Log(message, level);
+	}
+}
+
+
+In general, cand dorim ca o clasa sa adere la OCP dintr-un anumit punct de vedere
+(o anumita functionalitate), solutia este ABSTRACTIZAREA: se va crea o clasa abstracta sau
+interfata (vezi ILog) ce joaca rol de contract intre clasa si posibilele variante ale functionalitatii 
+respective.
+
+Referinta la interfata (clasa abstracta) se va numit punct de extensie.
+	
+class Logger
+{
+	ILog _log; /// punct de extensie
+}
+
+Un exemplu clasic (des intalnit) este cel in care avem doua clase asociate, o clasa
+Client si una Server. Clasa Client beneficiaza de un serviciu al clasei Server.
+
+Daca dorim sa putem schimba serviciul fara sa afectam clasa Client, solutia este OCP.
+
+class Client
+{
+	IServer _server;
+
+	public void DoJob()
+	{
+		_server.Job();
+	}
+}
+
+interface ISever
+{
+	void Job();
+}
+
+class Server1 : IServer
+{
+	public void Job()
+	{
+		
+	}
+}
+
+In mod real, cum se procedeaza pentru a obtine aderare OCP.
+
+Se identifica principala functionalitate (vezi cardurile CRC) a clasei.
+Se verifica daca repectiva functionalitate poate varia (poate fi inlocuita/optimizata)
+in timp.
+
+Daca da, aplicam abstractizare si clasa initiala va depinde de ceva abstract (deoarce ceea ce este abstract
+in general este FIX, nu variaza).
+
+
+
+
+
+
+
+
+	
+
+
+

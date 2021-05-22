@@ -1,0 +1,342 @@
+Principiul ISP (Interface Segregation Principle)
+
+Conform principiului: "entitatile software trebuie sa depinda de abstractizari (clase abstracte
+si interfete", pot aparea situatii in care o clasa depinde de o interfata cu foarte
+multe metode. ("fat interface")
+
+public interface IFat
+{
+	void Method1();
+	void Method2();
+	void Method3();
+	void Method4();
+}
+
+class Client12
+{
+	IFat _fat;
+
+	public void Method()
+	{
+		_fat.Method1();
+		_fat.Method2();
+	}	
+}
+
+Interfata IFat va fi implementata de anumite clase. Acestea obligatoriu vor
+implementa toate metodele. Indirect, clasa Client12 depinde de toate metodele
+din interfata IFat, chiar daca ea utilizeaza doar Method1 si Method2.
+
+class Fat1 : IFat
+{
+	//toate metodele implementate
+}
+
+Probleme: Daca se modifica Method3 sau Method4, este afectat si codul clasei Client12.
+(este necesar 'redeploy').
+
+Mai mult, daca o interfata contine foarte multe metode, cu siguranta acest fapt conduce la 
+incalcarea principiului SRP.
+
+Enunt: O clasa nu trebuie sa depinda de metode pe care nu le utilizeaza.
+
+Solutia corecta: divizarea interfetelor
+
+public interface IFat12
+{
+	void Method1();
+	void Method2();
+}
+
+public interface IFat34
+{
+	void Method3();
+	void Method4();
+}
+
+public interface IFat : IFat12, IFat34
+{
+}
+
+class Client12
+{
+	IFat12 _fat;
+}
+
+Principiului DIP (Dependency Inversion Principle)
+
+Enunt: Entitatile software de high-level nu trebuie sa depinde de entitati low-level.
+Ambele vor fi dependente de abstractizari.
+
+
+Parafrazare: programeaza orientat catre interfete, nu catre implementare!!
+
+class Client
+{	
+	public void Task()
+	{
+		ConcreteClass c = new ConcreteClass(); //incorect
+		c.Job();
+	}
+}
+
+class ConcreteClass
+{
+	public void Job()
+	{
+		
+	}
+}
+
+Corect:
+
+public interface IJob
+{
+	void Job();
+}
+
+class Client
+{
+	IJob _job;
+
+	public void Task()
+	{		
+		_job.Job();
+	}
+}
+
+class ConcreteClass : IJob
+{
+	public void Job()
+	{
+		
+	}
+}
+
+Tehnica Dependency Injection (injectarea dependentelor) 
+
+Spunem ca o clasa e dependenta de o alta clasa daca aceasta apara ca referinta
+in clasa initiala (exista o relatie de asociere intre clase).
+
+Principiul DIP spune ca asocierea trebuie facuta la un nivel cat mai inalt (clase generale, interfete).
+
+Dependency Injection este o tehnica prin care sunt create diverse obiecte de clase concrete
+utilizate intr-o clasa Client fara ca aceasta sa aiba cunostinta despre ele.
+
+//containere IoC (creaza automat instante ale interfetelor asa
+cum sunt specificate in configurare)
+
+se indica in config maparile intre interfete si tipuri concrete
+
+//Autofac, Ninject
+
+
+(1) Injectare prin constructor
+
+class Client
+{	
+	IJob _service;
+	
+	public Client(IJob service)
+	{
+		_service = service;
+	}
+
+	public void Task()
+	{
+		_service.Job();
+	}
+}
+
+var client = new Client(new ConcreteClient());
+
+
+(2) Injectare prin proprietati (metode de tip set)
+
+class Client
+{	
+	IJob _service;
+	
+	public IJob Service 
+	{ 
+	  get { return _service; }
+	  set { _service = value; }
+	}
+
+	public Client(IJob service)
+	{
+		_service = service;
+	}
+
+	public void Task()
+	{
+		_service.Job();
+	}
+}
+
+var client = new Client();
+client.Service = new ConcreteClient(); //aici injectez dependenta!
+
+(3) Injectare prin parametru la metoda
+
+class Client
+{		
+	public void Task(IJob service)
+	{
+		service.Job();
+	}
+}
+
+
+Studiu de caz
+
+Se doreste proiectarea unui sistem multi-panou (de tip wizard)
+Utilizarea presupune parcurgerea unui set de panouri.
+Exista un panou initial si unul final.
+
+Parcurgerea unei secvente de panouri se va numi 'sesiune'.
+
+Panourile sunt asezate intr-o structura de tip graf. 
+Fiecare nod in graf reprezinta un panou.
+Parcurgerea unei cai reprezinta sesiunea.
+Orice sesiune incepe cu un panou initial, se termina cu panoul final.
+
+La un momentan, in cadrul aplicatiei, un singur panou este panou initial (maracat ca atare);
+mai multe panouri pot fi panouri finale.
+
+Un panou trebuie sa fie executat.
+
+O executare a unui panou presupune:
+
+-afisarea panoului;
+-citirea datelor furnizate de utilizator;
+-validarea datelor citire
+-daca sunt valide, vor fi procesate.
+-daca nu sunt valide, se afiseaza un mesaj de eroare si se re-afiseaza panoul.
+
+O sesiune parcurge panourile si le executa succesiv.
+La fiecare pas, dupa executare, utilizatorul furnizeaza si o optiune
+de continuare (choice).
+
+La proiectarea solutiei se vor considera urmatoarele condititii (Extensibilitate, Flexibilitate, solutie cat mai generala)
+
+- Daca se doresc noi panouri in sistem (noi tranzitii intre panouri), acest
+lucru sa fie posibil fara mari costuri (codul actual sa fie cat mai putin afectat)
+
+- Structura grafului sa fie eficienta. (tipul de date selectat, resurse putine consumate) 
+
+Caz particular (Proiect 2):
+
+Sa se implementeze o aplicatie multi-panou pentru o agentie de zboruri (Tarom).
+
+Utilizatori- admin, client
+Facilitati:
+
+-autentificare (login) - P1 (initial)
+-adaugare zboruri (admin) - P2
+-modificare zboruri (admin) - P3
+-eliminare zbor (admin) - P10
+-rezervare zbor (admin,client) - P4
+-cumparare zbor (admin, client) - P5
+-cautare zbor (admin, client) - P6
+-lista zboruri - P7
+-rezerva loc - P8
+-help - P9
+-exit - P10 (final)
+
+
+
+Solutii de implementare:
+
+(1) Descompunere functionala (programare procedurala)
+
+Presupunem ca nu stim programare pe obiecte (presupune adevarata/falsa? - sesiunea va demonstra).
+
+Fiecare facilitate o vom transforma intr-o functie.
+
+- Trebuie sa execut o sesiune?
+
+Implementez o functie 'ExecuteSession'
+
+- Trebuie sa execut un panou?
+
+Implementez o functie 'ExecutePanel'
+
+- Display (afisare panou)
+- Read (citire date)
+- IsCorrect (validare date)
+- Message (mesaj de eroare) 
+- Process (procesare datelor corect furnizate)
+
+void ExecutePanel(int panelId, out int choice)
+{
+	do{
+		Display(panelId);
+		data = Read(panelId, out choice);
+		ok = IsCorrect(data, panelId);
+		if (!ok)
+		{
+			Message(panelId);
+		}
+	}		
+	while(!ok);
+
+	Process(data, panelId);
+}
+
+int IntialPanel()
+{
+	return initialPanelId;
+}
+
+bool IsFinal(int panelId)
+{
+	//....
+}
+
+//ca la automate, returnam urmatorul panou functie de panoul curent si alegerea de continuare
+int Transition(int panelId, int choice)
+{
+	return //.....
+}
+
+void ExecuteSession()
+{
+	//obtinem panoul initial
+	int panelId = InitialPanel();
+	//bool final = IsFinal(panelId);
+	int choice;
+	do{
+		ExcutePanel(panelId, out choice);
+		//obtine id-ul urmatorului panou
+		panelId = Transition(panelId, choice);				
+	}
+	while(!IsFinal(panelId));		
+}
+
+
+Dezavantaje abordare:
+
+-nu este extensibila: Fiecare functie are un parametru panelId prin care
+decide implementarea (de exemplu, intr-o instructiune switch).
+
+Exemplu:
+
+void Display(int panelId)
+{
+	switch(panelId)
+	{
+		case 1: //afisez panoul cu id-ul 1
+		...
+	}
+
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,287 @@
+MAP curs 1.
+
+Examen scris - 50%
+Proiecte de laborator(5 sau 6) - 50%
+
+Documentatie: 
+
+1. Head First Design Patterns By Eric Freeman, Elisabeth Robson, Bert Bates, Kathy Sierra
+2. Agile Software Development, Principles, Patterns, and Practices by Robert C. Martin
+3. Design Patterns: Elements of Reusable Object-Oriented Software 1st Edition 
+by Erich Gamma  (Author), Richard Helm  (Author), Ralph Johnson  (Author), John Vlissides  (Author), Grady Booch (Foreword)
+4. Object Oriented Software Construction by Bertrand Meyer
+
+Structura Cursului:
+
+1. Elemente de baza ale programarii orientate pe obiecte (recapitulare)
+
+2. Elementele de UML (Unified Modelling Language) 
+	- diagrame de cazuri de utilizare
+	- diagrame de clase
+	- diagrame de secventa 
+
+3. Principii de proiectare S.O.L.I.D (5 principii)
+	SRP (Single Responsibility Principle)
+	OCP (Open Closed Principle)
+	LSP (Liskov Substitution Principle)
+	ISP (Interface Segregation Principle)
+	DIP (Dependency Inversion Principle)
+
+4. Design Patterns - sabloane de proiectare pe studii de caz
+	- se introduce un scenariu
+	- se propune o solutie
+	- sunt analizate avantajele/dezavantajele
+ 	- se extrage sablonul/sabloanele utilizat in cadrul studiului de caz
+ 	- prezentarea generala a sablonului de proiectare
+
+Sabloane
+	- Structurale (1)
+	- Comportamentale (2)
+	- Creationale (3)
+	
+	- State Pattern
+	- Template Method Pattern
+	- Command Pattern
+	- Composite Pattern
+	- Strategy Pattern
+	- Singleton Pattern
+	- Abstract Factory Pattern
+	- Factory Method Pattern
+	- Observer Pattern
+	- Facade Pattern
+	- Adapter Pattern
+
+5. Elemente de arhitectura software
+
+Obiectivul cursului: 
+	- utilizarea metodologiei obiectuale in proiectarea sistemelor software extensibile mentenabile.
+	- utilizarea sabloanelor de proiectare a solutiei eficiente in rezolvarea problemelor de design.
+
+Review POO
+
+Clase 
+	1. Prototip care indica atributele si comportamentul unei familii de obiecte
+	2. Structura ce contine date si metode
+
+Obiecte
+	1. O entitate care are un nume, o anumita stare si un comportament in starea respectiva. 
+	2. O variabila ce are ca tip o clasa, o adresa de memorie, spatiu alocat prin constructor 
+	   pentru fiecare variabila a sa si o multime de metode.
+
+Metode/Operatii
+	 O functie membra a unei clase. Acestea implementeaza comportamentele obiectelor.
+
+Constructori
+	 Metode speciale de creare a obiectelor in starea lor initiala 
+
+Destructori 
+	 Metoda de eliberare a resurselor ocupate de un obiect cand i se termina durata de viata
+
+Incapsulare
+
+	 Separarea detaliilor de implementare de interfata publica cu exteriorul si ascunderea acestora
+         poarta numele de incapsulare. Comunicarea cu obiectul se face doar prin intermediul interfetei publice.
+
+Implementare ascunsa
+	 Toate datele si metodele ascunse ale clasei.
+public Class C
+{
+	//detalii de implementare ascunse
+	private int _data;
+	private void PrivateMethod();
+	
+	//interfata publica
+	public C(){}
+	public void PublicMethod();
+} 
+
+Interfata publica a obiectelor 
+	Multimea metodelor publice ale obiectelor. 
+
+Mesaj 
+	Apelarea metodei unui obiect
+Class A
+{
+	public void a(){}
+}
+class B
+{
+	A refA;
+	public void b()
+	{
+		refA.a(); //b trimite un mesaj "a" catre obiectul refA
+	}
+}
+
+Comportamentul obiectelor
+	Se poate discuta despre comportament intr-o anumita stare.
+	Comportamentul reprezinta modul in care este afectata starea curenta a unui obiect
+	cand i se apeleaza orice metoda a sa (din interfata publica)
+	
+Starea obiectelor 
+	Valorile particulare ale atributelor obiectului.
+
+Getter/Setter
+	Operatiile prin care putem obtine/modifica in mod controlat (vezi incapsularea)
+	//get: imi permite sa obtin starea curenta a obiectului (totdeauna metoda publica)
+	//set: permit modificarea starii curente
+
+Mostenire/Clase derivate/Generalizare/Specializare:
+	Spunem ca o clasa A este generalizare a unei clase B daca orice obiect de tip B putem spune ca
+	este "un fel de" obiect de tip A. ATENTIE! din punct de vedere comportamental (nu structural)
+Motor
+Masina (compunere intre motor si masina: motorul face parte din masina)
+Patrat. Dreptunghi 
+"Patratul este un fel de dreptunghi?" (nu)
+Corect, Dreptunghiul derivat din patrat (dpdv al comportamentului)
+
+Polimorfism 
+	Abilitatea de a transmite un mesaj cu aceeasi semnatura catre obiecte diferite,
+instante diferite ale unei ierarhii de clase, fara a cunoaste destinatarii.
+
+	Pentru de a beneficia de polimorfism (semantic) avem nevoie de urmatoarele elemente:
+-O ierarhie de clase (o clasa de baza si o multime de clase derivate)
+-O metoda (virtuala) comuna declarata in clasa de baza si redefinita in clasele derivate
+-Apelul metodei se face prin intermediul unei referinte(pointer) catre clasa de baza.
+
+class B
+{
+ public virtual void method(){...}
+}
+
+class D : B
+{
+ public override void method(){...}
+}
+
+class C : B
+{
+ public override void method(){...}
+}
+
+class Client
+{
+	public void Process(B refB)
+	{
+		refB.method(); //acesta este un mesaj (apel de metoda) polimorfic
+	}
+}
+
+Client c = new Client();
+
+c.Process(new B()); //catre B
+c.Process(new C()); //catre C
+c.Process(new D()); //catre D
+
+Observatie importanta: polimorfismul este extrem de important pentru scrierea de
+componente software (librarii) reutilizabile/extensibile.
+
+De exemplu, la o eventuala noua derivare a clasei B (o noua extensie), codul clasei C 	
+va ramane FUNCTIONAL fara a fi recompilat. (spunem ca este inchis la modificari).
+
+Abstractizare
+	Procedeul prin care obiecte diferite care fac parte din acelasi domeniu (inrudite)
+sunt tratate in mod uniform printr-o notiune generala, abstracta.
+	'Line', 'Circle',... pot fi abstractizate prin notiunea generala 'Shape'.
+
+Marele avantaj al abstractizarii este acela ca notiunea foarte generala, abstracta, nu 
+se modifica in timp!!
+
+Prin urmare, daca reusim sa construim componente software care sa depinda DOAR de
+elemente abstracte, generale, acestea vorm ramane nemodificate (la noi cerinte).
+
+REGULA IMPORTANTA: clasele Client trebuie sa depinda de lucruri cat mai generale!!
+ 
+clasele concrete/abstracte trebuie sa depinda de ABSTRACTIZARI (deoarece aceste sunt in fixe
+in timp)
+
+Clasa abstracta / Interfata
+
+O clasa abstracta reprezinta abstractizarea lumii reale in lumea programarii
+orientate pe obiecte.
+
+-nu poate fi instantiata (este mult prea generala pentru a cunoaste toate detaliile
+de implementare. Prin urmare, anumite metode vor fi declarate abstracte - nu au
+implementare)
+-apare in varful ierarhiilor de clase;
+-reprezinta un contract intre clasele Client si clasele unei ierarhii care ofera anumite
+servicii (numite clase Server).
+
+Contractul este reprezentat de multimea metodelor publice expuse in clasa abstracta,
+care pot (si trebuie) fi utilizate de clasa Client printr-o referinta catre clasa de baza.
+(ca sa beneficiem de polimorfism, metode virtuale)
+
+ 
+
+Interfata poate fi considera un caz particular de clasa abstracta: contine doar declarari
+de metode. Nici o metoda nu contine implementare (spre deosebire de clasa abstracta).
+
+Interfata - rol de contract. Evidentiaza (ca tip) interfata publica comuna a unei ierarhii
+de clase.
+
+public interface ILogger
+{
+	void Log(LogModel model);
+}
+
+//clasa client!!
+class LoggerManager
+{
+	ILogger Logger { get; set;}
+	
+	public void Log(LogModel model)
+	{
+		Logger.Log(model);
+	}
+}
+
+internal FileLogger : ILogger
+{
+	public void Log(LogModel model)
+	{
+	
+	}
+}
+
+clasa LoggerManager este clasa client care beneficiaza de ierarhia de clase ILogger!!
+Utilizeaza diverse implementari ale interfetei fara sa le cunoasca!
+
+Functii virtuale 
+
+O metoda a unei clase de baza (generale), care este apelata sau nu, functie
+de obiectul efectiv care prefixeaza apelul.
+
+Varianta apelata este data de tipul obiectului create, nu de tipul
+declarat al acestuia.
+
+class B
+{
+	public virtual void m(){...}
+}
+
+class D : B
+{
+	public override void m(){...}
+}
+
+B ref = new D();
+ref.m(); //aici se alege varianta din clasa D (conform principiului 
+functiilor virtuale)
+
+Un obiect al clasei D contine doua variante pentru metoda 'm', salvate
+intr-o tabela numita VFT (Virtual Functions Table).
+
+Legare dinamica (intarziata - late binding)
+
+In stransa legatura cu functiile virtuale.
+Obiectele care prefixeaza apelul unei functii virtuale sunt create dinamic,
+cu operatorul 'new'. Acesta fapt impiedica compilatorul sa cunoasca la momentul
+compilarii 'secventa' de cod care se va executa. 
+
+De aici si numele de 'legare intarziata': asocierea unui apel de functie virtuala
+cu o anumita implementare se numeste 'binding' (legare). - legarea este amanata pana
+la momentul executiei!  
+
+
+
+

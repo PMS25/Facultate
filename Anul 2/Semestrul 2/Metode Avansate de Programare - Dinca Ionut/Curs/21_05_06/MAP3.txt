@@ -1,0 +1,233 @@
+APOO Curs3.
+(UML)
+
+exista instrumente CASE (Computer Aided Software Engineering)
+ce au la baza UML: Rational Rose, Magic Draw, Visio, Visual Paradigm...
+-date fiind diagrame corect specificate stiu sa genereze codul sursa in diverse
+limbaje de programare.
+-reverse engineering: pe baza codului sursa dat, genereaza diagrame.
+
+Diagrama de cazuri de utilizare
+
+-indica utilizatorii si cum interactioneaza acestia cu sistemul.
+-actori (clase de utilizatori ai sistemului) - Bucatar, Casier, Chelner
+
+-cazuri de utilizare (scenarii particulare de utilizare a sistemului)
+-se deseneaza ca o elipsa si are ca nume de obicei un verb care indica
+o secventa de scenarii care se poate executa cu sistemul software.
+-un actor are unul sau mai multe cazuri de utilizare.
+
+Cazurile de utilizare pot fi descrise urmarind un sablon:
+-preconditii
+-postconditii
+-autorul
+-istoric
+-probleme de implementare
+-puncte de extensie (cum poate fi extins cazul de utilizare prin diverse implementari)
+
+Intre cazuri de utilizare se pot stabili relatii:
+
+(1) <Extension>
+(2) <Include>
+
+(1) Daca in secventa de executare a unui caz de utilizare pot aparea situatii exceptionale,
+acestea vor fi reprezentate ca puncte de extensie. Sunt implementate ca apeluri de metode
+conditionate de instructiuni de tip IF (sau Switch).
+
+(2) Indica faptul ca un caz de utilizare face parte din alt caz mai complex. (se pune in
+evidenta stilul de modularizare/ierarhizare a cazurilor mai complexe)
+
+
+Relatii intre actori : Generalizare
+
+Spunem ca actorul A este o generalizare a actorului B daca B poate efectua cu sistemul
+tot ce executa A si scenarii suplimentare.
+
+Diagrame de clase
+
+O diagrama de clasa indica structura statica a sistemului.
+Intervine in etapa de proiectare si implementare (design & code).
+Arata care sunt clasele/interfetele sistemului si relatiile dintre acestea.
+
+Simbol grafic: dreptunghi (cu trei compartimente)
+
+-nume
+-atribute (variabele)
+-metode
+
+atributele si metode se declara dupa sintaxa
+
+[specificator_acces]nume:[tip]
+
++:public
+-:private
+#:protected
+
+-datele/metodele de tip static se vor sublinia
+
+RELATII INTRE CLASE
+
+(1)ASOCIEREA
+
+Spunem ca intre clasele A si B exista relatie de asociere
+daca obiectele din clasa A au constiinta despre obiectele din clasa B si/sau invers.
+
+Desenam asociere intre clasele A si B daca e indeplinita cel putin una din urmatoarele
+conditii:
+
+(i) clasa A contine o referinta catre clasa B de tip variabila membru.
+
+class A
+{
+	private B _refB;
+}
+
+(ii) cand clasa B apare ca parametru al unei metode din clasa A
+
+class A
+{
+	public void Method(B refB)
+	{
+	}	
+}
+
+(iii) clasa B apare ca tip returnat al unei metode din A
+
+public B method()
+{
+	///...
+	return refB;
+}
+
+(iv) clasa B apare ca o exceptie intr-o metoda a clasei A
+
+public void method()
+{
+	try{}
+	catch(B refB)
+}
+
+public void method()
+{
+ throw new B();
+}
+
+(v) clasa B apare ca variabila locala intr-o metoda din clasa A
+
+class A
+{
+	public void method()
+	{
+		B refB;
+		//....
+	}
+}
+
+
+(2) AGREGAREA SI COMPUNEREA
+
+Sunt cazuri particulare de asociere prin care se indica o relatie de tip parte-intreg.
+
+Agregare: un obiect al clasei A contine unul sau mai multe obiecte de clasa B.
+
+In cazul agregarii, un obiect poate sa apartina la mai mult de un intreg. Prin urmare,
+poate exista de sine statator.
+
+Compunerea este un caz particular de agregare, relatia mai puternica in sensul ca intregul 
+depinde de partile sale componente si invers, o componenta nu exista decat intr-un intreg.
+Daca dispare intregul (este distrus, isi termina durata de viata), dispar si partile componente.
+Acestea nu pot exista in alte obiecte!
+Cand este creat intregul, sunt create si componentele!
+
+class A
+{
+	
+}
+
+class B
+{
+}
+
+//compunere: daca se creaza C, sunt create si A si B
+//daca se distruge C, sunt distruse si A si B!
+class C
+{
+	A a;
+	B b;
+}
+
+//la agregare, partile componente pot exista in mai multe obiecte de tip intreg!
+
+
+
+(3) GENERALIZAREA (SPECIALIZAREA)
+
+o clasa A este generalizare a unei B daca putem spune ca obiectele clasei B
+sunt "un fel de" obiecte de tip A.
+
+"un fel de" se refera la comportament, nu la atribute!!
+
+Adica, obiecte clasei B se comporta ca obiecte de clasa A!!
+
+OBSERVATIE: generalizarea permite reutilizarea codului. DAR nu trebuie utilizata in situatii
+nepotrivite (a nu se abuza de generalizare). Atentie, generalizarea introduce un grad ridicat
+de dependenta intre clasa. clasele A si B sunt strans dependente.
+
+IMPORTANT: de cate ori avem nevoie de functionalitatile unei clase, e de preferat
+sa utilizam AGREGARE/COMPUNERE in detrimentul mostenirii!!
+
+Tehnici de proiectare a claselor.
+
+Q: Fiind date cerintele sistemului, cum gasim clasele/interfetele si relatiile dintre clase?
+A: GREU.
+
+(1) Tehnica identificarii substantivelor.
+
+Sunt analizate cerinte descrise in limbaj natural si sunt evidentiate substantivele din text
+care au legatura cu sistemul.
+
+Obtinem o prima lista de clase candidat.
+Dintre aceste sunt eliminate cele foarte generale.
+
+Aceasta tehnica ofera o prima lista de clase, fara sa indice nimic referitor la relatiile dintre clase
+
+Exemplu:
+
+Sa se implementeze o aplicatie pentru un magazin virtual de cumparaturi.
+Clientul are posibilitatea sa caute produse, sa compande produse, sa ordoneze produse, sa adauge comanda
+in cosul de cumparaturi, sa isi creeze un cont.
+
+Client, Produs, Comanda, Cos, Cont
+
+(2) Tehnica, cardurilor CRC
+
+un card CRC (Class, Responsibility, Colaboration) indica:
+
+-responsabilitati principale ale clasei
+-relatiile cu alte clase (asocieri, compuneri, agregari, generalizari)
+
+Din responsabilitati se pot deduce atributele si metodele!!! (responsabilitatile
+devin metode in clasa respectiva).
+Din colaborari se deduc relatiile cu alte clase!
+
+Pentru fiecare clasa se deseneaza cardul CRC.
+
+Class: numele clasei
+Responsibility: responsabilitatile principale ale clasei
+Colaboration: colaborari cu alte clase (prin relatii in cadrul diagramei de clase)
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+

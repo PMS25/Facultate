@@ -1,0 +1,323 @@
+Sabloane de proiectare (Design Patterns)
+
+Sablon: solutie generala de design (proiectare), reutilizabila,
+care rezolva un scenariu particular de proiectare si poate aplicat
+la o larga de aplicatii.
+
+De obicei, sabloanele rezolva probleme de design de 3 categorii 
+
+-comportamental: comportamente ale obiectelor in diferite stari
+-structural: relatii dintre clasele obiectelor
+-creational: modul in care create/construite obiectele care participa la sablon.
+
+Un sablon de proiectare se descrie in general dupa urmatoare schema (GoF: Gang of Four -E. Gamma):
+-catalog de sabloane de proiectare
+
+1. Numele: Un nume sugestiv (State, Template Method, Singleton, Composite...)
+2. Intentia: care este obiectivul principal al sablonului (ce problema de design rezolva)
+3. Motivatia: Se prezinta o problema reala de rezolvat in care s-a utilizat sablonul
+4. Structura: care sunt clasele/interfetele ce participa la sablon si relatiile dintre ele
+5. Participanti: clasele care participa la sablon
+6. Aplicabilitate: cand se poate utiliza sablonul, in situatii
+7. Consecinte (Avantaje/Dezavantaje)
+8. Colaborari: cum comunica obiectele intre ele prin mesaje pentru a se implementa sablonul
+9. Implementare: se indica variante de implementare 
+
+1. State Pattern
+2. Schimbarea starii unui obiect si al comportamentului acestuia fara dependente de stari
+concrete.
+3. Vezi aplicatia multi-panou (un panou reprezinta o stare, o sesiune reprezinta obiectul
+care isi schimba starea; schimbarea starii coincide cu afisare urmatorului panou; schimbarea
+comportamentului coincide cu executari diferite ale panoului curent)
+4.
+5. 
+- clasa Context (clasa Session): pentru obiectele care trec prin stari/comportamente
+diferite. 
+ - metoda Request() este comportamentul care se modifica la schimbarea starii (Execute din Session)
+	-state.Handle <=> currentState.Execute: comportamentul in starea "state".
+
+- clasa abstracta State: abstractizare a starilor si comportamentelor obiectului Context (Session).
+- ConcreteStateA, ConcreteStateB sunt stari/comportamente particulare, concrete. 
+
+6. -Cand un obiect trece prin multe stari si se comporta diferit in stari diferite.
+Pentru extensibilitate, mentenanta, se recomanda utilizarea sablonului.
+-o metoda implementeaza intructiuni switch sau if/else extrem de complexe, ce depind in general
+general de o enumerare.
+
+switch(enumValue)
+{
+	case 1: procesare1;
+	case 2: procesare2;
+	
+	...
+	case n: procesaren;	
+}
+
+Solutie: fiecare "case" se transforma intr-o stare;
+
+abstract class State
+{
+	public abstract void procesare();
+}
+
+class State1: State
+{
+	public void procesare()
+	{
+		//implementez procesare1
+	}
+}
+
+if(stare1)
+	procesare1();
+else if(stare2)
+	procesare2();
+
+==> 
+
+(se poate utiliza ca tehinca de refactorizare de cod sursa)
+
+7. Avantaje: extensibilitatea (OCP pentru clasa Context); 
+Dezavantaje: complexitate; (pot rezultate multe clase - de mici dimensiuni - explozie exponentiala)
+
+8. 
+-Clientul apeleaza metoda Request din clasa Context;
+-in continuare, obiectul Context apeleaza prin intermediul referintei "state",
+metoda "Handle". Prin polimorfism, functie de obiectul real care prefixeaza
+apelul (starea curenta), se va executa versiunea dintr-o clasa "ConcreteStateX"; in acest fel este simulata schimbarea starii si
+a comportamentului. 
+
+9. Variante de implementare:
+ a) Toate starile posibile sunt create la initializea aplicatiei si memorate in clasa
+Context; analog si tranzitiile; (vezi aplicatia zboruri)
+ b) Clasa context detine doar referinta catre starea curenta, starile concrete sunt create dinamic,
+pe masura ce se schimba starea. Tranzitiile nu mai sunt memorate, sunt implementate "in cod",
+in clasele derivate din State.
+
+StateA => StateB (se schimba starea in conditia "condition")
+
+class Context
+{
+	public State CurrentState { get; set; }
+	
+	public void Request()
+	{
+		CurrentState.Handle();
+		CurrentState.NextState(this);
+	}
+}
+
+abstract class State()
+{
+	abstract void NextState(Context c);
+}
+
+class StateA : State
+{
+	public void NextState(Context c)
+	{	
+		if (condition)
+		{
+			c.CurrentState = new StateB();	
+		}	
+	}
+
+	
+}
+
+Aceasta varianta are avantajul ca tranzitiile sunt usor de vazut din cod, 
+avantul memoriei. Dezavantaj: clasele derivate de tip "State" nu mai sunt 
+independente. La noi stari/tranzitii, e posibil sa fie modificate cele
+existente.
+
+Template Method Pattern
+
+Intentia: se cunoaste scheletul unui algoritm, dar nu se cunosc pasii acestuia.
+Motivatia: vezi metoda Execute din clasa abstracta State
+
+public abstract class State
+    {
+        public int Id { get; set; }
+        public static int Choice { get; set; } 
+        public abstract void Display();
+        public abstract void Read();
+        public abstract bool IsFinal();
+        public abstract string Message();
+        public abstract bool IsCorrect();
+        public abstract void Process();
+
+        //metoda Template (schelet de algoritm)
+        public void Execute()
+        {
+            var ok = false;
+
+            do
+            {
+                Display();
+                Read();
+                ok = IsCorrect();
+                if (!ok)
+                {
+                    Message();
+                }
+            }
+            while (!ok);
+
+            Process();
+        }
+    }
+
+Structura: o clasa abstracta si cel putin o implementare concreta.
+
+Participanti: AbstractClass (vezi clasa State): contine schema algoritmului intr-o metoda concreta.
+Pasii algoritmului (PrimitiveOperation1, PrimitiveOperation2) apar ca metode 
+abstracte.
+
+ConcreteClass (Vezi LoginPanel,...): implementeaza pasii algoritmului.
+
+Avantaje:
+-reutilizare de cod sursa; (re-utilizare de comportament comun: metoda "execute" este comuna tuturor panourilor)
+-aderare la principiul Hollywood: "don't call us, we'll call you!": principiul corect de reutilizare
+de cod sursa.
+
+
+class A
+{
+	public void m()
+	{
+		//codul metodei din clasa de baza	
+		hook();	
+	}
+	
+	public virtual void hook() { }
+}
+
+class B : A
+{
+	//public void m()
+	//{
+	//	base.m(); //apelez varianta de baza; incalca principiul!
+	//	//cod specific clasei B
+	//}
+	public override void hook()
+	{
+	
+	}
+}
+
+Template method: "injectare" de comportament in diverse puncte (metode "hook" numite
+puncte de extensie, fara modificarea codului sursa. 
+
+Tehnica recomandata (corecta) de reutilizare de cod sursa!!
+
+
+Exemplul particular:
+
+//citeste in colectii de obiecte de tip T date din baza de date!!
+//metoda de citire va fi o metoda template!!
+    //pentru instructiuni de tip select din baza de date
+    public abstract class DbReader<T>
+    {
+        public string ConnectionString { get; set; }
+
+        //metoda template
+        public List<T> Get()
+        {
+            var result = new List<T>();
+
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(SqlText, connection))
+                    {
+                        var reader = command.ExecuteReader(); //rezultatul
+                        //maparea unui reader la un obiect de tip T
+                        result = MapAll(reader);
+                    }
+                }
+
+                return result;
+            }
+            catch(Exception e)
+            {
+                //logare exceptie e
+                return result;
+            }
+        }
+
+        //metoda template
+        private List<T> MapAll(IDataReader reader)
+        {
+            var result = new List<T>();
+
+            while(reader.Read())
+            {
+                result.Add(Map(reader)); //mapez linia curenta!
+            }
+
+            return result;
+        }
+
+        protected abstract T Map(IDataReader reader);
+
+        public abstract string SqlText { get; }
+
+    }
+
+   internal class UserDbReader : DbReader<User>
+    {
+        public override string SqlText => "SELECT Username, Password FROM User";
+
+        protected override User Map(IDataReader reader)
+        {
+            return new User()
+            {
+                Username = (string)reader["Username"],
+                Password = (string)reader["Password"]
+            };
+        }
+    }
+
+Aplicatii de tip Undo/Redo (multi-level) (Sablonul Command)
+
+Pentru o aplicatie cu interfata grafica (Agenda de Contacte), sa se implementeze
+mecanismul undo/redo de nivel n.
+
+Aplicatia trece printr-o suita de stari provocata de o suita de comenzi efectuate!
+
+S0=>S1=>S2...Sn=>Sn+1 
+C0=>C1=>C2...Cn=>Cn+1
+
+Executare "Undo": sa anulez efectul comenzii Cn+1; aplicatia va trece in starea Sn.
+
+Solutia: pentru anularea unei comenzi se va memora cea mai mica informatie posibila: 
+diferenta dintre starea curenta si cea anterioara.
+
+Exemplu: pentru Cn+1 memorez diferenta dintre Sn+1 si Sn
+
+Exemplu concret:
+
+Daca Cn+1 este: adaugarea unui nou contact in agenda!
+adica voi memora noul contact adaugat si pozitia pe care a fost adaugat!
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

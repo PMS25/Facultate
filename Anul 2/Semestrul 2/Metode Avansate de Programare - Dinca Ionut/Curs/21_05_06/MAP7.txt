@@ -1,0 +1,187 @@
+(2) Proiectare orientata pe obiecte (Design Patterns: State, Template Method)
+
+Solutia orientata pe obiecte utilizand sablonul de proiectare State.
+
+Afisarea si procesarea unui panou curent formeaza starea curenta a aplicatiei.
+
+Prin urmare, abstractizam notiunea de panou printr-o clasa "State"
+
+//abstactizarea notiunii de panou prin intermediul unei clase abstracte State
+public abstract class State
+    {
+        public int Id { get; set; }
+        public static int Choice { get; set; } 
+        public abstract void Display();
+        public abstract void Read();
+        public abstract bool IsFinal();
+        public abstract string Message();
+        public abstract bool IsCorrect();
+        public abstract void Process();
+
+        //metoda Template (schelet de algoritm)
+	//panou curent stim sa il executam!!!
+        public void Execute()
+        {
+            var ok = false;
+
+            do
+            {
+                Display();
+                Read();
+                ok = IsCorrect();
+                if (!ok)
+                {
+                    Message();
+                }
+            }
+            while (!ok);
+
+            Process();
+        }
+    }
+
+  class LoginPanel : State
+    {
+        UserModel _user;
+
+        public LoginPanel()
+        {
+            Id = 1;
+        }
+        public override void Display()
+        {
+            Console.WriteLine("Display Login");//afiseaza panoul!!
+        }
+
+        public override bool IsCorrect()
+        {
+            //se cauta _user in baza de date!! 
+
+            return false;
+        }
+
+        public override bool IsFinal()
+        {
+            return false;
+        }
+
+        public override string Message()
+        {
+            return "wrong username or password";
+        }
+
+        public override void Process()
+        {
+            
+        }
+
+        public override void Read()
+        {
+            _user = new UserModel();
+            //citire user (din baza de date sau consola)
+        }
+    }
+
+Pentru fiecare panou, se implementeaza diferita clasa State.
+
+Analog, abstractizam notiune de "sesiune".
+
+ public class Session
+    {
+        public Dictionary<PanelType, State> _states; //colectia de stari
+        public PanelType InitialPanel { get; set; }
+
+        private static Key _searchKey = new Key();
+
+        public Dictionary<Key, PanelType> _transitions; //memorarea grafului //tranzitiile
+
+        public Session()
+        {
+            _states = new Dictionary<PanelType, State>();
+            _transitions = new Dictionary<Key, PanelType>();
+        }
+
+        public void Execute()
+        {
+            //obtinem panoul de start
+            var currentPanel = _states[InitialPanel];
+
+            do
+            {
+                currentPanel.Execute();
+
+                _searchKey.Choice = State.Choice;
+                _searchKey.From = currentPanel.Id;
+
+                currentPanel = _states[_transitions[_searchKey]];
+            }
+            while (!currentPanel.IsFinal());
+        }
+
+        public void AddPanel(State s, PanelType type)
+        {
+            if (_states.ContainsKey(type))
+            {
+                _states.Add(type, s);
+            }
+        }
+
+        //adaugarea unei tranzitii de la panoul cu id-ul "from" si alegerea "choice"
+        //catre panoul cu id-ul "to"
+        public void AddTransition(PanelType from, int choice, PanelType to)
+        {
+            var key = new Key()
+            {
+                From = (int)from,
+                Choice = choice
+            };
+
+            if (!_transitions.ContainsKey(key))
+            {
+                _transitions.Add(key, to);
+            }
+        }
+    }
+}
+
+public class Key
+    {
+        public int From { get; set; }
+        public int Choice { get; set; }
+
+        //de implementat 
+        public override int GetHashCode()
+        {
+            return 2 * From.GetHashCode() + 3 * Choice.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+    }
+
+public enum PanelType
+{
+	Login = 1,
+	//...	
+}
+
+
+Baza de date cu un numar minim de tabele
+
+User (userid, username, password, tip - client, admin)
+Flight (flightid, from, to, date, price,...)
+FlightSeat(seatid, flightId)
+FlightReservation(userId, flightId, date, expirationDate)
+
+Structura proiecte in solutie:
+
+Flight.Model (library) - clasele principale (modelele) (State, Session, LoginPanel,...), enum-urile
+
+
+
+
+
+
+

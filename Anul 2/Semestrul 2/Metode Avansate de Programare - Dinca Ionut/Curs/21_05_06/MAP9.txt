@@ -1,0 +1,238 @@
+Aplicatii de tip Undo/Redo (multi-level) (Sablonul Command)
+
+Pentru o aplicatie cu interfata grafica (Agenda de Contacte), sa se implementeze
+mecanismul undo/redo de nivel n.
+
+Aplicatia trece printr-o suita de stari provocata de o suita de comenzi efectuate!
+
+S0=>S1=>S2...Sn=>Sn+1 
+C0=>C1=>C2...Cn=>Cn+1
+
+Executare "Undo": sa anulez efectul comenzii Cn+1; aplicatia va trece in starea Sn.
+
+Solutia: pentru anularea unei comenzi se va memora cea mai mica informatie posibila: 
+diferenta dintre starea curenta si cea anterioara.
+
+Exemplu: pentru Cn+1 memorez diferenta dintre Sn+1 si Sn
+
+Exemplu concret:
+
+Daca Cn+1 este: adaugarea unui nou contact in agenda!
+adica voi memora noul contact adaugat si pozitia pe care a fost adaugat!
+
+S0=>S1=>S2...Si=>Si+1... Sn=>Sn+1 
+C0=>C1=>C2...Ci=>... Cn=>Cn+1
+
+Daca avem n comenzi executate la un moment dat, putem efectua Undo/Redo.
+
+C0=>C1=>C2...Ci=>... Cn=>Cn+1 - suita de comenzi efectuate
+	     <=Undo      ...<=Undo
+	      Redo=>
+
+Avem nevoie de o lista a ultimelor n comenzi executate (HistoryList) - istoric al comenzilor
+Cu ajutorul unui cursor, ne pozitionam pe comanda care urmeaza sa fie anulata/refacuta!
+
+1. HistoryList: istoric al comenzilor (lista cu cursor)
+2. Abstractizam notiunea de comanda (de executat, de anulat, de refacut)
+3. HistoryList va contine comenzi abstracte.
+
+2.
+abstract class Command
+    {
+        public Receiver { get; } //obiectul asupra caruia se executa comanda (cel care trece prin stari succesive)
+	//in cazul nostru, va fi AgendaGUI (interfata grafica pentru agenda de contacte)
+	public string Name { get; } //nume unic al comenzii
+	public abstract void Execute();
+        public abstract void Undo();
+        //metoda template
+	public virtual void Redo()
+        {
+            Execute();
+        }
+    }
+
+Exemplu de comanda particulara:
+
+class AddContact : Command
+{
+	public ContactModel Contact { get; private set; }
+	public int Position { get; private set; }
+	
+	public AddContact(int position, ContactModel contact, Receiver receiver)
+	{
+		Position = position;
+		Contact = contact;
+		Receiver = receiver;	
+	}
+
+	public void Execute()
+	{
+		//se adauga noul contact in baza de date
+		//se afiseaza noua lista de contacte pe interfata (obiectul Receiver isi
+		//actualizeaza starea) - adaugare contact pe pozitia "Position"
+	}
+
+	public void Undo()
+	{
+		//eliminare contact din baza de date
+		//afisare noua lista de contacte (fara contactul eliminat)
+	}
+}
+
+class RemoveContact : Commmand
+{
+	
+}
+
+class EditContact : Command
+{
+
+}
+
+1. Obs. Daca s-a executat cel putin un "Undo" (cursorul nu mai este pozitionat
+pe ultima comanda din lista) si se executa o noua comanda (alta decat undo sau redo, care trebuie sa ajunga
+in HistoryList pe ultima pozitie, atunci toate comenzile din
+dreapta cursorului vor fi eliminate din lista - nu mai are sens sa vorbim despre Redo pentru acestea.
+
+ public class HistoryList
+    {
+        static readonly int MAX_SIZE = 50; //maxim al comenzilor
+        List<Command> _commands;
+        int _cursor;
+
+        public HistoryList()
+        {
+            _commands = new List<Command>();
+            _cursor = -1;
+        }
+
+        public void Add(Command newCommand) //o noua comanda de executat se adauga in lista
+        {
+            if (_commands.Count == MAX_SIZE)
+            {
+                //efectuati deplasare la stanga a tuturor comenzilor cu o pozitie, astfel "cea mai veche comanda"
+		//se va pierde
+            }
+
+            if (_cursor < _commands.Count - 1) //avem cel putin un "Undo"
+            {
+                //elimin toate comenzile din dreapta cursorului!!
+		RemoveAllFromRight();
+            }
+
+            //inserarea
+            //noi comenzi pe ultima pozitie (alta varianta: lista circulara!!)                            
+            _commands.Add(newCommand);
+            _cursor = _commands.Count - 1; //pozitionarea cursorului pe aceasta comanda
+        }
+
+	public void Remove(Command c) //a se implementa o metoda Equals pentru obiectele comand dupa un camp cu o valoare unica (de exemplu
+//numele comenzii - unic sau un cod unic al comenzii (Guid)
+	{
+		
+	}
+
+	public void RemoveAllFromRight()
+	{
+		//eliminare comenzi din dreapta cursorului
+	}
+
+        public void Undo()
+        {
+            Item.Undo(); //comanda de la pozitia cursorului este anulata!
+            _cursor--; //mutam cursorul la stanga
+        }
+
+        public Command Item //comanda de la pozitia cursorului
+        {
+            get
+            {
+                //test _cursor!!
+                return _commands[_cursor];
+            }
+        }
+
+        public void Redo()
+        {
+            Item.Redo(); //re-execut comanda de la pozitia cursorului
+            _cursor++; //mutam cursorul la dreapta
+        }
+
+        public bool BeforeFirst //not Undo (dezactivati posibilitatea de Undo pe interfata)
+        {
+            get{ return _cursor == -1; }
+        }
+
+        public bool OnLast //not Redo!! (dezactivati posibilitaeta de Redo pe interfata)
+        {
+           get { return _cursor == _commands.Count - 1; }
+
+        }
+    }
+
+//clasa asupra carei sunt executate comenzile
+  public class Receiver
+    {
+        HistoryList History { get; set; }
+
+        public Receiver()
+        {
+            History = new HistoryList();
+        }
+
+        //presupunem ca se executa la actionarea comenzii "Add" - adaugare Contact nou
+
+	private void Add_Click(object sender, EventArgs e)
+        {
+	    //vom crea obiectul Contact cu datele preluate de pe interfata
+            var c = new Contact();
+            var command = new AddContact(position, c, this);
+            History.Add(command); //se va adauga pe ultima pozitie (cursor corect pozitionat)
+            command.Execute(); //execut comanda
+        }
+
+	//la actionarea comenzii "Undo" - anulare ultima comanda
+ 	private void Undo_Click(object sender, EventArgs e)
+        {
+	    if (!History.BeforeFirst) //se recomanda sa dezactivati butonul Undo pe interfata
+            {
+                History.Undo(); //anuleaza comanda de la pozitia cursorului
+            }
+        }
+
+	//la actionarea comenzii "Redo" - anulare ultima comanda
+ 	private void Redo_Click(object sender, EventArgs e)
+        {
+	    if (!History.OnLast) //se recomanda sa dezactivati butonul Undo pe interfata
+            {
+                History.Redo(); //anuleaza comanda de la pozitia cursorului
+            }
+        }
+    }
+
+Proiect3: Sa se implementeze o aplicatie pentru o agenda de contacte cu posibilitatea anularii/refacerii ultimelor n
+comenzii efectuate.
+Comenzile anulabile: "add", "edit", "delete"
+O comanda va avea un nume unic.
+
+Facilitati:
+	- adaugare contact (undo/redo)
+	- eliminare contact (undo/redo)
+	- editare (modificare contact) (undo/redo)
+	- undo
+	- redo
+	- afisarea continutului listei HistoryList - dupa nume
+	- posibilitatea anularii mai multor comenzi (sunt selectate ultimele k comenzi din HistoryList, anulate de la ultima)
+	- lista ultimelor comenzi anulate va fi afisata separat (pentru a vizualiza comenzile Redo posibile)
+
+Date despre contact:
+-id, nume, adresa, email, telefon, website
+
+Salvare in baza de date
+Se va implementa si sablonul TemplateMethod pentru DbReader (ContactDbReader)!
+
+
+
+
+
+

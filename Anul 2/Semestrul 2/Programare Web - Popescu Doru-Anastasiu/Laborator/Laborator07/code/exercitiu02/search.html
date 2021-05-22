@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/style.css">
+    <title>Orar</title>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a href="./index.html">Home</a>
+        <a href="./insert.html">Insert</a>
+        <a href="./search.html" class="active">Search</a>
+    </div>
+
+    <form action="http://localhost:8088/lab07/script.php" method="post">
+        <div class="group">
+            <p>Semestru:</p> <input name="semestru" type="number">
+            <p>Zi:</p> <input name="zi" type="text">
+            <p>Interval Orar:</p> <input name="interval_orar" type="text">
+            <p>Grupa:</p> <input name="grupa" type="number">
+            <p>Profesor:</p> <input name="profesor" type="text">
+            <br>
+            <input type="submit" name="view_all" value="Afisare integrara" class="button blue">
+            <br>
+            <input type="submit" name="search_course" value="Cautare dupa semestru, zi, interval" class="button blue">
+            <input type="submit" name="delete_course" value="Stergere Cursuri" class="button red">
+            <br>
+            <input type="submit" name="view_group" value="Afisare ore grupa" class="button blue">
+            <br>
+            <input type="submit" name="view_teacher" value="Afisare ore profesor" class="button blue">
+        </div>
+    </form>
+</body>
+
+</html>

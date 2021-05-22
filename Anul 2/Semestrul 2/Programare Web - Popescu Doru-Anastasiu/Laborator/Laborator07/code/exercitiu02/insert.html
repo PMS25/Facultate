@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/style.css">
+    <title>Orar</title>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a href="./index.html">Home</a>
+        <a href="./insert.html" class="active">Insert</a>
+        <a href="./search.html">Search</a>
+    </div>
+
+    <form action="http://localhost:8088/lab07/script.php" method="post">
+        <div class="group">
+            <p>Semestru:</p> <input name="semestru" type="number">
+            <p>Zi:</p> <input name="zi" type="text">
+            <p>Interval Orar:</p> <input name="interval_orar" type="text">
+            <p>An Studiu:</p> <input name="an_studiu" type="number">
+            <p>Grupa:</p> <input name="grupa" type="number">
+            <p>Denumire:</p> <input name="denumire" type="text">
+            <p>Tip:</p> <input name="tip" type="text">
+            <p>Sala:</p> <input name="sala" type="text">
+            <p>Profesor:</p> <input name="profesor" type="text">
+            <br>
+            <input type="submit" name="insert" value="Inserare" class="button blue">
+            <br><br>
+            <input type="submit" name="delete_all" value="Resetare Orar" class="button red">
+        </div>
+    </form>
+</body>
+
+</html>

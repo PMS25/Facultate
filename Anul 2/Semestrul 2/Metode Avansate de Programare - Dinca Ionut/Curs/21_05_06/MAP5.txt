@@ -1,0 +1,219 @@
+Principiul LSP (Liskov Substitution Principle)
+
+OCP recomanda utilizarea abstractizarii, fapt ce conduce la ierarhii de clase (mostenire).
+
+LSP arata tocmai modul prin care se construim aceasta ierarhie.
+
+Enunt: (1) Daca o entitate (metoda/clasa) depinde de o referinta (pointer) catre
+o clasa de baza, aceasta trebuie sa ramana functionala pentru toate clasele derivate
+fara sa cunoasca nimic despre acestea.
+(2) Entitata nu stie despre clasele derivate!
+
+Altfel spus, daca inlocuim referinta respectiva cu ORICE clasa ce implementeaza interfata/clasa
+abstracta, entitatea ramane functionala.
+
+Incalcare LSP => Incalcare OCP.
+
+Exemplu de incalcare.
+
+(1) - clasa stie despre clasele derivate
+
+class GraphicTool
+{
+	public void Draw(ShapeType type)
+	{
+	
+	}
+}
+
+ public enum ShapeType
+    {
+        Circle, Triangle, Rectangle, Line
+    }
+
+    abstract class Shape
+    {
+        public ShapeType Type { get; set; }
+
+        public abstract void Draw();
+    }
+
+    class Circle : Shape
+    {
+        public override void Draw()
+        {
+
+        }
+
+        public double Radius { get; set; }
+    }
+
+    class Line : Shape
+    {
+        public override void Draw()
+        {
+            
+        }
+    }
+
+    class GraphicTool
+    {
+        List<Shape> _shapes;
+
+        public void DrawAll() //incalcare LSP => incalcare OCP (clasa are referinta catre  Shape si totusi stie de clasele derivate (depinde de acestea)
+        {
+            //incalca OCP deoarece la un eventual nou tip de figura geom. instr.case se va modifica
+            foreach (var shape in _shapes)
+            {
+                switch (shape.Type)
+                {
+                    case ShapeType.Circle:
+                        var circle = (Circle)shape;
+                        circle.Draw();
+                        var r = circle.Radius;
+                        //..
+                        break;
+                }
+            }
+        }
+
+(2) Incalcare LSP mai subtila. Mostenirea si redefinirea metodelor au fost utilizate incorect.
+
+class Rectangle
+{
+	public virtual int Width  { get; set; }
+	public virtual int Height { get; set; }
+
+	public int Area()
+	{
+		return Width * Height;   
+	}
+}
+
+class Square : Rectangle
+{
+ 	public Square(int length)
+	{
+		Width  = Height = length;
+	}
+
+	//solutie temporara!!
+	public override int Width 
+	{
+		get {...}
+		set 
+		{
+			Height = value;
+		}
+	}	
+}
+
+
+(c)
+
+//conform LSP, nu cunosc nimic despre clasele derivate
+//200
+void Draw(Rectangle r)
+{
+	r.Width + = 20;
+	
+	//daca substituim pe r cu Square, instr. de mai sus va modifica inclusiv Height
+
+	var w = r.Width;
+	var h = r.Height;
+	
+	var area = w * h; //66000
+	//
+	if (area == someValue)
+	{
+		//desenez
+	}	
+}
+
+//nu functioneaza corect pentru clasa Square!!
+
+
+(a) clasa Square are cel putin o variabila suplimentara
+(b) pot aparea probleme daca cineva apeleaza separat una din cele
+doua proprietati
+
+var s = new Square(20);
+s.Width = 10;
+var area = s.Area(); // 100 // 200
+
+Tehnica 'Design By Contract'
+(Vezi cartea Object Oriented Software Construction, B. Meyer)
+
+Se considera o clasa Server (ce ofera servicii) si o clasa Client
+care beneficiaza de serviciile clasei Server.
+
+clasa Server 'semneaza' un contract cu clasa Client (prin intermediul unei clase
+abstracte sau interfete): totalitatea metodelor publice din interfata/clasa abstracta
+ce pot fi utilizate de Client.
+
+Pentru fiecare metode se stabilesc doua proprietati: Preconditie si Postconditie.
+
+Preconditia: o formula adevarata inainte sa apelez serviciul (metoda)
+Postconditia: o forumula adevarata dupa apelarea serviciului (metodei).
+
+Conform tehnicii Design prin Contract, clientul se obliga sa apeleze
+metoda intr-un context in care preconditia este adevarata.
+Serverul se obliga sa asigure Postconditia.
+
+Avantaje:
+(1) Codul simplificat al clasei Server.
+(2) Aderare la LSP in urmatoarele conditii: orice clasa derivata
+care redefineste o metoda a clasei de baza trebuie sa asigure o preconditie 'mai slaba'
+si o postconditie 'mai tare' decat cele din clasa de baza.
+
+class ServerA
+{
+	//P
+	public virtual void Method() { }
+	//Q
+}
+
+class ServerB : ServerA
+{
+	//P'
+	public override void Method() {  }
+	//Q'
+}
+
+P => P' (adevarata)
+Q' => Q (adevarata)
+
+In aceste conditii de 'mostenire', se asigura LSP. De ce?
+
+class Client
+{
+	ServerA _server;
+
+	public void Job()
+	{
+		//aici P este adevarata!! Adica, din P => P' rezulta si P' adevarata
+		_server.Method(); //aici, de ce codul ramane functional si pentru ServerB??	
+		//P' adevarata, conform DbC, Q' adevarata!, daar Q' => Q;
+		//aici Q este adevarata
+	}
+}
+
+(Se pot stabili invarianti de clasa. Ce inseamna o clasa corecta?
+Invarianti pentru constructori default.)
+
+SRP (Single Responsibility Principle)
+Principiul Responsabilitatii unice.
+
+O clasa trebuie sa contina o singura responsabilitate de baza.
+Drept consecinta, clasa repectiva va avea 'un singur motiv' pentru a fi modificata, schimbata.
+
+Codul este usor de intretinut, de testat.
+
+DIP, ISP.
+
+
+
+
+
+
+

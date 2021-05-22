@@ -1,0 +1,29 @@
+body {
+    background-color: #fff;
+}
+
+h3 {
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.75em;
+    color: #626fad;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.img-figura{
+    width: 500px;
+    height: 500px;
+}
+
+.text{
+    text-align: center;
+    font-size: 1.25em;
+    margin-left: 1em;
+    margin-right: 1em;
+}

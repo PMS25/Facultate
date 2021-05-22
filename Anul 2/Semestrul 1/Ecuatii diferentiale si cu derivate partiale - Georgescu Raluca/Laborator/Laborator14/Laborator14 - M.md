@@ -42,7 +42,7 @@ x > 2,\ y \ne 0,\ z > 0 \\
 \end{cases}\\ \\
 
 &e) \frac{dx}{x(x+y)} = \frac{dy}{-y(x+y)} = \frac{dz}{(y-x)(2x+2y+z)},\ 
-|x| \ne |y| \ne 0 \\
+|x| = |y| \ne 0 \\
 &R:
 \begin{cases}
 xy = C_1\\

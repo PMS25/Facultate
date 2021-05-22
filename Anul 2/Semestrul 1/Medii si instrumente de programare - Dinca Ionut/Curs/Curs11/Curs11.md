@@ -6,240 +6,193 @@
 
 **Ce este un eveniment?**
 
-Este o notificare trimisă de către un obiect care declanseanză executarea unei/unor acțiuni!
+Este o notificare trimisă de către un obiect care declanşeanză executarea unei / unor acțiuni!
 
-În C# implementarea evenimentelor s-a făcut după șablonul Observer (design pattern Observer). Obiectul observat trimite notificările către obiectele observabile fără să știe nimic despre acestea. Mai mult, evenimentele C# sunt implementate cu ajutorul tipului `delegate`
+În C# implementarea evenimentelor s-a făcut după șablonul `Observer` (design pattern `Observer`). Obiectul observat trimite notificările către obiectele observabile fără să știe nimic despre acestea. Mai mult, evenimentele C# sunt implementate cu ajutorul tipului `delegate`
 
 **Cum se construiește un eveniment?**
 
-1. Se declară un delegat care indică semnătura actiunilor de executat. 
-2. Se declara evenimentul: o variabila de tip delegatul anterior, in plus aparand si cuvantul cheie "event"
+1. Se declară un delegat care indică semnătura acţiunilor de executat. 
+2. Se declară evenimentul: o variabilă de tip delegatul anterior, în plus aparând şi cuvântul cheie `event`
 
-Aplicatie: Sa se implementeze o lista de obiecte (colectie) inzestrata cu notificari la adaugarea / eliminarea obiectelor.
+**Aplicaţie**: Să se implementeze o listă de obiecte (colecţie) înzestrată cu notificări la adăugarea / eliminarea obiectelor. Adică să putem adăuga acţiuni de executat pentru evenimente de tipul: `OnAdded` şi `OnRemoved`.
 
-Adica sa putem adauga actiuni de executat pentru evenimente de tipul: "OnAdded" si "OnRemoved".
+```c#
+namespace EventApplication {
+  // 1. Declararea delegatului
+  public delegate void Notify<R> (R elem);
 
-namespace EventApplication
-{
-    //1. declararea delegatului
-    public delegate void Notify<R>(R elem);
+  public class ObservableList<T> {
+    public List<T> Elements { get; private set; }
+    // 2. Declararea evenimentelor
+    public event Notify<T> Added;
+    public event Notify<T> Removed;
 
-    public class ObservableList<T>
-    {
-        public List<T> Elements { get; private set; }
-        //2. declararea evenimentelor
-        public event Notify<T> Added;
-        public event Notify<T> Removed;
-    
-        public ObservableList()
-        {
-            Elements = new List<T>();
-        }
-    
-        public void Add(T newElement)
-        {
-            Elements.Add(newElement);
-            OnAdded(newElement);
-        }
-    
-        public void Remove(T element)
-        {
-            if (Elements.Contains(element))
-            {
-                Elements.Remove(element);
-            }
-    
-            OnRemoved(element);
-        }
-    
-        protected virtual void OnAdded(T elem)
-        {
-            Added?.Invoke(elem);
-
-
-            //if(Added != null)
-            //{
-            //    Added.Invoke();
-            //}
-        }
-    
-        protected virtual void OnRemoved(T elem)
-        {
-            Removed?.Invoke(elem);
-        }
+    public ObservableList() {
+      Elements = new List<T> ();
     }
+
+    public void Add(T newElement) {
+      Elements.Add(newElement);
+      OnAdded(newElement);
+    }
+
+    public void Remove(T element) {
+      if (Elements.Contains(element))
+        Elements.Remove(element);
+
+      OnRemoved(element);
+    }
+
+    protected virtual void OnAdded(T elem) {
+      Added?.Invoke(elem);
+      //if(Added != null) {
+      //    Added.Invoke();
+      //}
+    }
+
+    protected virtual void OnRemoved(T elem) {
+      Removed?.Invoke(elem);
+    }
+  }
 }
+```
 
+**Evenimente predefinite**: `EventHandler`, `EventHandler<EventArgs>`
 
-Evenimente predefinite: EventHandler, EventHandler<EventArgs>
+- `EventHandler`: pentru evenimente fără transmitere de date
+- `EventHandler<EventArgs>`: pentru evenimente cu transmitere de date
 
-EventHandler: pentru evenimente fara transmitere de date
-EventHandler<EventArgs> pentru evenimente cu transmitere de date
+```c#
+namespace EventApplication {
+  // 1. Declararea delegatului
+  // public delegate void Notify<R>(R elem);
+  public class ObservableList<T> {
+    public List<T>Elements { get; private set; }
 
-namespace EventApplication
-{
-    //1. declararea delegatului
-    //public delegate void Notify<R>(R elem);
+    // 2. Declararea evenimentelor
+    public EventHandler Added;
+    public EventHandler Removed;
 
-    public class ObservableList<T>
-    {
-        public List<T> Elements { get; private set; }
-        //2. declararea evenimentelor
-        public EventHandler Added;
-        public EventHandler Removed;
-    
-        public ObservableList()
-        {
-            Elements = new List<T>();
-        }
-    
-        public void Add(T newElement)
-        {
-            Elements.Add(newElement);
-            OnAdded(this, EventArgs.Empty);
-        }
-    
-        public void Remove(T element)
-        {
-            if (Elements.Contains(element))
-            {
-                Elements.Remove(element);
-            }
-    
-            OnRemoved(this, EventArgs.Empty);
-        }
-    
-        protected virtual void OnAdded(object sender, EventArgs args)
-        {
-            Added?.Invoke(sender, args);
-
-
-            //if(Added != null)
-            //{
-            //    Added.Invoke();
-            //}
-        }
-    
-        protected virtual void OnRemoved(object sender, EventArgs args)
-        {
-            Removed?.Invoke(sender, args);
-        }
+    public ObservableList() {
+      Elements = new List<T>();
     }
+
+    public void Add(T newElement) {
+      Elements.Add(newElement);
+      OnAdded(this, EventArgs.Empty);
+    }
+
+    public void Remove(T element) {
+      if (Elements.Contains(element))
+        Elements.Remove(element);
+      OnRemoved(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnAdded(object sender, EventArgs args) {
+      Added?.Invoke(sender, args);
+      //if(Added != null) {
+      //    Added.Invoke();
+      //}
+    }
+
+    protected virtual void OnRemoved(object sender, EventArgs args) {
+      Removed?.Invoke(sender, args);
+    }
+  }
 }
+```
 
+Varianta cu transmitere de date către eveniment:
 
-//Varianta cu transmitere de date catre eveniment:
+```c#
+namespace EventApplication {
+  // 1. Declararea delegatului
+  // public delegate void Notify<R>(R elem);
+  public class ObservableList<T> {
+    public List<T>Elements { get; private set; }
 
-namespace EventApplication
-{
-    //1. declararea delegatului
-    //public delegate void Notify<R>(R elem);
+    // 2. Declararea evenimentelor
+    public EventHandler<T> Added;
+    public EventHandler<T> Removed;
 
-    public class ObservableList<T>
-    {
-        public List<T> Elements { get; private set; }
-        //2. declararea evenimentelor
-        public EventHandler<T> Added;
-        public EventHandler<T> Removed;
-    
-        public ObservableList()
-        {
-            Elements = new List<T>();
-        }
-    
-        public void Add(T newElement)
-        {
-            Elements.Add(newElement);
-            OnAdded(this, newElement);
-        }
-    
-        public void Remove(T element)
-        {
-            if (Elements.Contains(element))
-            {
-                Elements.Remove(element);
-            }
-    
-            OnRemoved(this, element);
-        }
-    
-        protected virtual void OnAdded(object sender, T args)
-        {
-            Added?.Invoke(sender, args);
-
-
-            //if(Added != null)
-            //{
-            //    Added.Invoke();
-            //}
-        }
-    
-        protected virtual void OnRemoved(object sender, T args)
-        {
-            Removed?.Invoke(sender, args);
-        }
+    public ObservableList() {
+      Elements = new List<T>();
     }
+
+    public void Add(T newElement) {
+      Elements.Add(newElement);
+      OnAdded(this, newElement);
+    }
+
+    public void Remove(T element) {
+      if (Elements.Contains(element))
+        Elements.Remove(element);
+      OnRemoved(this, element);
+    }
+
+    protected virtual void OnAdded(object sender, T args) {
+      Added?.Invoke(sender, args);
+      //if(Added != null) {
+      //    Added.Invoke();
+      //}
+    }
+
+    protected virtual void OnRemoved(object sender, T args) {
+      Removed?.Invoke(sender, args);
+    }
+  }
 }
+```
 
-Se pot transmite mai multe informatii "custom" catre evenimente prin implementarea unei clase
-derivate din "EventArgs" si incapsularea datelor in aceasta.
+Se pot transmite mai multe informaţii `custom` către evenimente prin implementarea unei clase derivate din `EventArgs` şi încapsularea datelor în aceasta.
 
-namespace EventApplication
-{
-    //1. declararea delegatului
-    //public delegate void Notify<R>(R elem);
+```c#
+namespace EventApplication {
+  // 1. Declararea delegatului
+  // public delegate void Notify<R>(R elem);
+  public class CustomEventArgs<T>: EventArgs {
+    public T elem { get; set; }
+    public DateTime Date { get; set; }
+  }
 
-    public class CustomEventArgs<T> : EventArgs
-    {
-        public T elem { get; set; }
-        public DateTime Date { get; set; }
+  public class ObservableList<T> {
+    public List<T>Elements { get; private set; }
+
+    // 2. Declararea evenimentelor
+    public EventHandler<CustomEventArgs<T>> Added;
+    public EventHandler<CustomEventArgs<T>> Removed;
+
+    public ObservableList() {
+      Elements = new List<T>();
     }
-    
-    public class ObservableList<T>
-    {
-        public List<T> Elements { get; private set; }
-        //2. declararea evenimentelor
-        public EventHandler<CustomEventArgs<T>> Added;
-        public EventHandler<CustomEventArgs<T>> Removed;
-    
-        public ObservableList()
-        {
-            Elements = new List<T>();
-        }
-    
-        public void Add(T newElement)
-        {
-            Elements.Add(newElement);
-            OnAdded(this, new CustomEventArgs<T> { elem = newElement, Date = DateTime.Now });
-        }
-    
-        public void Remove(T element)
-        {
-            if (Elements.Contains(element))
-            {
-                Elements.Remove(element);
-            }
-    
-            OnRemoved(this, new CustomEventArgs<T> { elem = element, Date = DateTime.Now });
-        }
-    
-        protected virtual void OnAdded(object sender, CustomEventArgs<T> args)
-        {
-            Added?.Invoke(sender, args);
 
-
-            //if(Added != null)
-            //{
-            //    Added.Invoke();
-            //}
-        }
-    
-        protected virtual void OnRemoved(object sender, CustomEventArgs<T> args)
-        {
-            Removed?.Invoke(sender, args);
-        }
+    public void Add(T newElement) {
+      Elements.Add(newElement);
+      OnAdded(this, new CustomEventArgs<T> { elem = newElement, Date = DateTime.Now });
     }
+
+    public void Remove(T element) {
+      if (Elements.Contains(element))
+        Elements.Remove(element);
+      OnRemoved(this, new CustomEventArgs<T> { elem = element, Date = DateTime.Now });
+    }
+
+    protected virtual void OnAdded(object sender, CustomEventArgs<T> args) {
+      Added?.Invoke(sender, args);
+      //if(Added != null) {
+      //    Added.Invoke();
+      //}
+    }
+
+    protected virtual void OnRemoved(object sender, CustomEventArgs<T> args) {
+      Removed?.Invoke(sender, args);
+    }
+  }
 }
+```
+
+
 
 
 

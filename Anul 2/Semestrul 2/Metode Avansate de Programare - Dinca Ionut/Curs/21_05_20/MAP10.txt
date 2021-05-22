@@ -1,0 +1,509 @@
+
+Command Pattern
+
+Intentie (scop): incapsularea cererilor (actiunilor) in obiecte pentru a putea fi
+memorate, re-executate, anulate (undo/redo), transmise ca parametrii.
+
+Motivatie: vezi aplicatiile undo/redo.
+
+Structura:
+
+Invoker (HistoryList): memoreaza/executa comenzi de tip Command
+Receiver (AgendaGUI): obiectul asupra caruia sunt executate comenzile;
+Command: clasa abstracta sau interfata ce reprezinta un contract intre Invoker, Receiver si comenzile concrete
+ConcreteCommand: o comanda specifica;
+
+namespace CommandPatternSkeleton
+{
+    public abstract class Command
+    {
+        public string Name { get; set; }
+        public abstract void Execute();
+    }
+}
+
+namespace CommandPatternSkeleton
+{
+    class ConcreteCommand1 : Command
+    {
+        public Receiver Receiver { get; private set; }
+
+        public ConcreteCommand1(string name, Receiver receiver)
+        {
+            Receiver = receiver;
+            Name = name;
+        }
+
+        public override void Execute()
+        {
+            Console.WriteLine($"Command {Name} is executing...");
+            Receiver.Action();
+        }
+    }
+}
+
+namespace CommandPatternSkeleton
+{
+    class ConcreteCommand2 : Command
+    {
+        public Receiver Receiver { get; private set; }
+
+        public ConcreteCommand2(string name, Receiver receiver)
+        {
+            Receiver = receiver;
+            Name = name;
+        }
+
+        public override void Execute()
+        {
+            Console.WriteLine($"Command {Name} is executing...");
+            Receiver.Action();
+        }
+    }
+}
+
+namespace CommandPatternSkeleton
+{
+    class Receiver
+    {
+        public void Action()
+        {
+            Console.WriteLine("Action on receiver is running...");
+        }
+    }
+}
+
+namespace CommandPatternSkeleton
+{
+    //invoker-ul este decuplat (nu stie nimic despre) de Receiver si comenzi concrete
+    public class Invoker
+    {
+        public List<Command> Commands { get; private set; }
+
+        public Invoker()
+        {
+            Commands = new List<Command>();
+        }
+
+        public void Add(Command c)
+        {
+            Commands.Add(c);
+        }
+
+        public void AddRange(List<Command> commands)
+        {
+            Commands.AddRange(commands);
+        }
+
+        public void Invoke()
+        {
+            foreach(var command in Commands)
+            {
+                command.Execute();
+            }
+        }
+    }
+}
+
+namespace CommandPatternSkeleton
+{
+    class Client
+    {
+        static void Main(string[] args)
+        {
+            Invoker i = new Invoker();
+            Receiver r = new Receiver();
+
+            i.AddRange(new List<Command>() 
+            { 
+                new ConcreteCommand1("c1", r),
+                new ConcreteCommand2("c2", r),
+                new ConcreteCommand1("c3", r),
+            });
+
+            i.Invoke();
+
+            Console.ReadKey();
+        }
+    }
+}
+
+Avantaje: sistem extensibil (se pot adauga comenzi noi in sistem fara modificarea codului sursa actual);
+-invoker-ul si receiver-ul sunt total decuplate (pot fi variate independent);
+
+Composite Pattern
+
+Scenariu: sa se implementeze un instrument grafic pentru desenare de figuri geometrice si picturi.
+O pictura este o grupare de alte figuri geometrice primitive sau alte picturi.
+
+Apare o structura arborescenta, in care frunzele sunt primitive grafice, iar nodurile interne sunt
+picturi.
+
+Dorim sa propunem o solutia care trateaza uniform atat primitivele grafice (frunzele din arbore) cat
+si picturile (nodurile interne de tip Picture).
+
+Prin urmare, pentru o tratare uniforma (care ne permite sa extindem ulteior aplicatia),
+avem nevoie de abstractizarea notiunilor parte (frunza - primitiva grafica) si intreg (nodurile interne - picture)
+
+Declaram:
+
+abstract class Graphic
+{
+	public abstract void Draw();
+	public abstract void Resize(double);
+	public abstract void MoveTo(int,int);
+	public virtual void AddChild(Graphic) { } //se potriveste doar la nodurile interne!	
+}
+
+class Line : Graphic
+{
+	public void Draw() { }
+	public void Resize(double) { }
+	public void MoveTo(int,int) { }
+}
+
+class Circle : Graphic
+{
+	public void Draw() { }
+	public void Resize(double) { }
+	public void MoveTo(int,int) { }
+}
+
+class Picture : Graphic
+{
+	List<Graphic>	_children;
+
+	public void Draw() 
+        { 
+		foreach(var c in _children)
+		{
+			c.Draw();
+		}
+	}
+	public void Resize(double) { }
+	public void MoveTo(int,int) { }	
+	public virtual void AddChild(Graphic c) 
+	{ 
+		_children.Add(c);
+	}
+}
+
+Proiect (extensie la aplicatia Shape):
+
+sa se ofere posibilitatea de grupare a figurilor geometrice si obtinerii de picturii (desenate,
+redimensionate, mutatate ca un singur obiect!!)
+
+Composite Pattern: tratarea uniforma a obiectelor aflate in relatii ierarhice (arborescente)
+de tip parte-intreg. 
+
+Participanti: 
+
+Component (Graphic): clasa abstracta (interfata) ce reprezinta interfata comuna a obiectelor
+aflate in relatia parte-intreg; (optional, poate sa contina metode pentru adaugare/eliminare/obtinere
+copil.
+
+Composite (Picture): reprezinta un obiect de tip intreg in cadrul ierarhiei;
+-colectie (prin agregare sau compunere) de obiecte de tip Component;
+
+Leaf (Line,Circle): reprezinta o "frunza" in structura arborescenta.
+
+Aplicabilitate: in aplicatii cu structuri aborescente de tip parte-intreg, care se doresc
+a fi tratate uniform.
+
+Observatie:
+
+Daca vom combina sablonul Composite cu sablonul Command, putem obtine
+obiecte de tip "colectii de comenzi" - un batch de comenzi ce pot fi executate ca si cum
+ar fi o singura commanda. (acestea se numesc de obicei macro-comenzi).
+
+//suita de comenzi
+class MacroCommand : Command
+{
+	public List<Command> Commands { get; private set; }
+
+	public void Execute()
+	{
+		foreach(var c in Command)
+		{
+			c.Execute();
+		}
+	}
+}
+
+Aplicatie la Composite:
+
+Evaluarea expresiilor aritmetice 4+5*(x-y) si afisarea lor in: "preordine": RSD, "inordine": SRD, "postordine". SDR
+ 
+Solutia va fi astfel incat sa tratam uniform atat frunzele (constantele si variabilele), cat
+si operatorii (ce pot fi binari sau unari).
+Operatori de forma:
+e1+e2
+e1-e2
+e1*e2
+e1/e2
+unde e1, e2 sunt expresii artimetice, constante sau variabile
+
+In continuare, prin compunere de operatori (de aici si sablonul Composite), vom obtine
+expresii artimetice mai complexe.
+
+//expresie abstracta
+namespace CompositeExpression
+{
+    abstract class Expression
+    {
+        public abstract string Inord();
+        public abstract string Preord();
+        public abstract string Postord();
+        public abstract int Evaluate();
+    }
+}
+
+namespace CompositeExpression
+{
+    public class Constant : Expression
+    {
+        public int Value { get; private set; }
+
+        public Constant(int value)
+        {
+            Value = value;
+        }
+
+        public override int Evaluate()
+        {
+            return Value;
+        }
+
+        public override string Inord()
+        {
+            return Value.ToString();
+        }
+
+        public override string Postord()
+        {
+            return Value.ToString();
+        }
+
+        public override string Preord()
+        {
+            return Value.ToString();
+        }
+    }
+}
+
+namespace CompositeExpression
+{
+    public class Variable : Expression
+    {
+        public string Name { get; private set; }
+        public int Value { get; set; }
+
+        public Variable(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public override int Evaluate()
+        {
+            return Value;
+        }
+
+        public override string Inord()
+        {
+            return $"{Name}[{Value}]";
+        }
+
+        public override string Postord()
+        {
+            return $"{Name}[{Value}]";
+        }
+
+        public override string Preord()
+        {
+            return $"{Name}[{Value}]";
+        }
+    }
+}
+
+namespace CompositeExpression
+{
+    public abstract class Binary : Expression
+    {
+        public Expression Left { get; private set; }
+        public Expression Right { get; private set; }
+        public string OpSymbol { get; }
+
+        public Binary(Expression left, Expression right, string op)
+        {
+            Left = left;
+            Right = right;
+            OpSymbol = op;
+        }
+
+        public override string Inord()
+        {
+            return $"{Left.Inord()}{OpSymbol}{Right.Inord()}";
+        }
+
+        public override string Postord()
+        {
+            return $"{Left.Inord()}{Right.Inord()}{OpSymbol}";
+        }
+
+        public override string Preord()
+        {
+            return $"{OpSymbol}{Left.Inord()}{Right.Inord()}";
+        }
+    }
+}
+
+
+namespace CompositeExpression
+{
+    public class Sum : Binary
+    {
+        public Sum(Expression left, Expression right, string op): base(left, right, op)
+        {           
+        }
+
+        public override int Evaluate()
+        {
+            return Left.Evaluate() + Right.Evaluate();
+        }
+    }
+
+    public class Mult : Binary
+    {
+        public Mult(Expression left, Expression right, string op) : base(left, right, op)
+        {
+        }
+
+        public override int Evaluate()
+        {
+            return Left.Evaluate() * Right.Evaluate();
+        }
+    }
+
+    public class Dif : Binary
+    {
+        public Dif(Expression left, Expression right, string op) : base(left, right, op)
+        {
+        }
+
+        public override int Evaluate()
+        {
+            return Left.Evaluate() - Right.Evaluate();
+        }
+    }
+}
+
+namespace CompositeExpression
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //4+5*(x-y)
+            var e = new Sum(new Constant(4), new Mult(new Constant(5), new Dif(new Variable("x", 2), new Variable("y", 3), "-"), "*"), "+");
+            Console.WriteLine(e.Inord());
+            Console.WriteLine(e.Preord());
+            Console.WriteLine(e.Postord());
+            Console.WriteLine("e(2,3)={0}", e.Evaluate());
+            Console.ReadKey();
+        }
+    }
+}
+
+
+
+
+Abstract Factory Pattern
+
+(fabrici abstracte de obiecte)
+
+Scenariu:
+
+Desenarea componentelor GUI astfel incat aplicatia sa suporte "multiple look and feel".
+
+abstract class Button
+{
+	public abstract void Paint();
+}
+
+class WinButton : Button
+{
+	public abstract void Paint() { desenare button specific platformei Windows }
+}
+
+class MacButton : Button
+{
+	public abstract void Paint() { desenare button specific platformei Mac }
+}
+
+abstract class Window
+{
+	public abstract void Paint();
+}
+
+class WinWindow : Window
+{
+	public abstract void Paint() { desenare Windowspecific platformei Windows }
+}
+
+class MacWindow : Window
+{
+	public abstract void Paint() { desenare buWindowtton specific platformei Mac }
+}
+
+Cum sunt create (dinamic) obiecte din diverse familii (ierarhii)?
+
+(creare dinamica, la executie; asociere corecta de obiecte)
+
+Solutia: Abtract Factory
+
+abstract class AbstractFactory
+{
+	public abstract Button CreateButton();
+	public abstract Window CreateWindow();
+}
+
+//implementam fabrici concrete
+
+class WinFactory : AbstractFactory
+{
+	public Button CreateButton() { return new WinButton(); }
+	public Window CreateWindow() { return new WinWindow(); }
+}
+
+class MacFactory : AbstractFactory
+{
+	public Button CreateButton() { return new MacButton(); }
+	public Window CreateWindow() { return new MacWindow(); }
+}
+
+//DIP: programeaza la nivel abstract (la nivel de interfata).
+class Application
+{
+	AbstractFactory Factory { get; set;}
+
+	public void PaintComponents()
+	{
+		var button = Factory.CreateButton(); 
+	}
+}
+
+var a = new Application();
+a.Factory = new WinFactory(); //sau utilizam o librarie IoC (Inversion of Control) pentru
+dependency injection (Ninject)
+
+Avantaje:
+
+Extensibilitate: 
+-pot fi considerate noi tipuri de obiecte in sistem, din familii diferite;
+-tipul obiectelor poate fi selectat dinamic, la momentul executiei;
+-este asigurata gruparea corecta o obiectelor!
+
+
+
+

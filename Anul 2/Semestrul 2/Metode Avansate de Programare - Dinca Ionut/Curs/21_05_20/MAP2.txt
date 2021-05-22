@@ -1,0 +1,39 @@
+Elemente generale de UML (Unified Modelling Language)
+
+UML: limbaj de modelare (nu este limbaj de programare!) care permite analiza, modelarea, specificarea
+cerintelor unui sistem software.
+
+Elemente grafice si textuale.
+
+Diagrame: 
+-de cazuri de utilizare
+-de clase
+-de secventa
+-de colaborare
+-de stare
+-de componente
+-de activitati
+
+In general, un proces de dezvoltare a unui sistem software contine urmatoarele etape (principale):
+
+1. Analiza si specificarea cerintelor
+2. Proiectare si implementare software (design & code) 
+3. Verificare si testare
+4. Mentenanta.
+
+ANALIZA si PROIECTARE orientata pe obiecte.
+
+Caracteristicile unui sistem sofware de calitate:
+1. Extensibilitate (fexibilitate) - noi functionalitati - costuri cat mai mici
+2. Reutilizabil - sistemul propune solutii generale, care poti fi (re)-utilizate
+si in alte sisteme software
+3. Robust - sistemul este bine testate, se comporta bine in situatii limita
+4. Mentenabil
+
+Diagrama de cazuri de utilizare
+
+-indica utilizatorii si cum interactioneaza acestia cu sistemul.
+-actori
+-cazuri de utilizare (scenarii particulare de utilizare a sistemului)
+
+

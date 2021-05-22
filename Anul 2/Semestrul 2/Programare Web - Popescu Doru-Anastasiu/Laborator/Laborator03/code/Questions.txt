@@ -1,0 +1,79 @@
+# 1
+Schimbarea direcţiei de mers la dreapta sau la stânga nu este permisă la întâlnirea:
+A - indicatorul 1;
+B - indicatorul 2;
+C - ambelor indicatoare.
+
+CORECT: B
+
+# 2
+Panoul de sub indicator permite:
+A - staţionarea mijloacelor de transport public de persoane în intervalul menţionat;
+B - staţionarea în timpul orelor menţionate;
+C - staţionarea în afara intervalului orar menţionat.
+
+CORECT: C
+
+# 3
+Care dintre indicatoare te avertizează că urmează să intersectezi un drum fără prioritate?
+A - ambele;
+B - indicatorul 1;
+C - indicatorul 2.
+
+CORECT: B
+
+# 4
+Care dintre indicatoarele alăturate creează obligaţii pentru conducătorii de vehicule?
+A - indicatorul nr. 1;
+B - indicatorul nr. 2;
+C - nici unul dintre aceste indicatoare.
+
+CORECT: A
+
+# 5
+La întâlnirea panoului de pe stâlp aveţi obligaţia:
+A - să vă deplasaţi cu atenţie pe sectorul de drum îngustat;
+B - să acordaţi prioritate numai autocamioanelor şi autobuzelor care circulă din sens opus;
+C - să acordaţi prioritate vehiculelor care circulă din sens opus.
+
+CORECT: A
+
+# 6
+Indicatorul interzice accesul:
+A - autoturismelor, motocicletelor fără ataş şi vehiculelor cu tracţiune animală;
+B - autovehiculelor şi vehiculelor cu tracţiune animală;
+C - autoturismelor, motocicletelor şi vehiculelor împinse sau trase cu mâna.
+
+CORECT: B
+
+# 7
+Indicatorul vă avertizează că urmeaza:
+A - un drum cu denivelări;
+B - un segment de drum pe care se execută lucrări de amenajare;
+C - o denivelare pentru limitarea vitezei.
+
+CORECT: C
+
+# 8
+Dacă aţi selectat banda de circulaţie conform imaginii prezentate, vă este permis:
+A - să circulaţi înainte sau la dreapta;
+B - să viraţi numai la dreapta;
+C - să circulaţi numai înainte.
+
+CORECT: A
+
+# 9
+Care este regula de trecere la întâlnirea acestui indicator?
+A - regula priorităţii de stânga;
+B - regula primului ajuns în intersecţie;
+C - regula priorităţii de dreapta.
+
+CORECT: C
+
+# 10
+Indicatorul interzice accesul:
+A - motocicletelor;
+B - mopedelor;
+C - bicicletelor.
+
+CORECT: B

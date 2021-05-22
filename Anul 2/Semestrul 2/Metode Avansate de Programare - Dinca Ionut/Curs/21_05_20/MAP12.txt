@@ -1,0 +1,145 @@
+Sabloane de proiectare creationale
+
+1) Singleton Pattern
+2) Abstract Factory Pattern
+3) Factory Method Pattern
+
+
+3) Factory Method Pattern
+
+Scenariu: a) O clasa Document: o colectie de obiecte de tip Page.
+Dorim sa abstractizam atat notiunea de document, cat si notiuninea de pagina (in cadrul documentului) pentru
+a obtine un grad ridicat de flexibilitate/extensibilitate - sa putem crea diverse tipuri de documente.
+
+ public abstract class Document
+    {
+        public List<Page> Pages { get; private set; }
+
+        public Document()
+        {
+            Pages = new List<Page>();
+            CreatePages();
+        }
+
+        public void AddPage(Page page)
+        {
+            Pages.Add(page);
+        }
+
+        public void Print()
+        {
+            Pages.ForEach(p => p.Print());
+        }
+
+        protected abstract void CreatePages();  //metoda factory          
+    }
+
+////////////////////////////////////
+
+class ReportDocument : Document
+    {
+        protected override void CreatePages()
+        {
+            AddPage(new ContentPage());
+            AddPage(new IntroductionPage());
+            AddPage(new TextPage());
+            AddPage(new BibliographyPage());
+        }
+    }
+
+//////////////////////////////////////
+
+ class ResumeDocument : Document
+    {
+        protected override void CreatePages()
+        {
+            AddPage(new IntroductionPage());
+            AddPage(new EducationPage());
+            AddPage(new ResultsPage());
+        }
+    }
+
+//////////////////////////////////////
+
+public abstract class Page
+    {
+        public abstract void Print();
+    }
+
+////////////////////////////////////
+
+ class BibliographyPage : Page
+    {
+        public override void Print()
+        {
+            Console.WriteLine("Bibilography.");
+        }
+    }
+
+
+Alt exemplu:
+
+    abstract class Creator
+    {
+        public A Component1 { get; private set; }
+        public B Component2 { get; private set; }
+        public C Component3 { get; private set; }
+
+        public Creator()
+        {
+            Component1 = CreateComponent1();
+            Component2 = CreateComponent2();
+            Component3 = CreateComponent3();
+        }
+
+        protected abstract A CreateComponent1(); //factory method
+        protected abstract B CreateComponent2(); //factory method
+        protected abstract C CreateComponent3(); //factory method
+    }
+
+    class ConcreteCreator : Creator
+    {
+        protected override A CreateComponent1()
+        {
+            return new ConcreteA();
+        }
+
+        protected override B CreateComponent2()
+        {
+            return new ConcreteB();
+        }
+
+        protected override C CreateComponent3()
+        {
+            return new ConcreteC();
+        }
+    }
+
+    abstract class A
+    {
+
+    }
+
+    class ConcreteA : A
+    {
+
+    }
+
+    abstract class B
+    {
+
+    }
+
+    class ConcreteB : B { }
+
+    abstract class C
+    {
+
+    }
+    class ConcreteC : C { }
+
+Sablonul "Factory Method" deleaga (in cadrul unei clase abstracte) claselor derivate crearea obiectelor.
+
+
+
+

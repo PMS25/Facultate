@@ -1,0 +1,102 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../img/background.jpg');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: cover;
+    z-index: -1;
+}
+
+.topnav {
+    overflow: hidden;
+    text-align: center;
+    background-color: #333;
+}
+
+.topnav a {
+    display: inline-block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 12px 14px;
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #0260fc;
+    color: white;
+}
+
+.group {
+    display: inline-block;
+    text-align: center;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background: rgba(51, 51, 51, .6);
+    padding: 20px;
+    width: 40%;
+}
+
+.group h3 {
+    color: white;
+    font-size: 1.8em;
+    margin: 15px;
+}
+
+.group p {
+    color: white;
+    font-size: 1.5em;
+    margin: 10px;
+}
+
+.group input[type=text] {
+    width: 100%;
+    padding: 10px 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.group input[type=number] {
+    width: 100%;
+    padding: 10px 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.button {
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.2em;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.red{
+    background-color: #9d091a;
+}
+
+.blue{
+    background-color: #0260fc;
+}

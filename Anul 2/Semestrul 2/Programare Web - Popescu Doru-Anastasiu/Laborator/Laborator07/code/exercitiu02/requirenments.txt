@@ -1,0 +1,3 @@
+# Observaţii
+- Codul a fost scris pentru PHP8
+- In fisierele 'insert.html' şi 'search.html' trebuie schimbată calea către fişierul `script.php` si portul localhost cu cel folosit la rulare 
